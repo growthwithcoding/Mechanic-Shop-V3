@@ -1,12 +1,12 @@
--- Fix MySQL User Permissions for Mechanic Shop V2 Database
+-- Fix MySQL User Permissions for Mechanic Shop V3 Database
 -- Run this if you encounter permission errors
 
 -- Grant all privileges to root user for the database
-GRANT ALL PRIVILEGES ON mechanic_shop_v2.* TO 'root'@'localhost';
+GRANT ALL PRIVILEGES ON mechanic_shop_v3.* TO 'root'@'localhost';
 
 -- If you're using a different user, replace 'root' and 'localhost' with your username and host
 -- Example for user 'mechanic_user' from any host:
--- GRANT ALL PRIVILEGES ON mechanic_shop_v2.* TO 'mechanic_user'@'%';
+-- GRANT ALL PRIVILEGES ON mechanic_shop_v3.* TO 'mechanic_user'@'%';
 
 -- Flush privileges to apply changes
 FLUSH PRIVILEGES;

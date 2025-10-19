@@ -1,10 +1,10 @@
--- Recreate Database Script for Mechanic Shop V2
+-- Recreate Database Script for Mechanic Shop V3
 -- This script drops and recreates the database with all tables
 
 -- Drop database if exists and create fresh
-DROP DATABASE IF EXISTS mechanic_shop_v2;
-CREATE DATABASE mechanic_shop_v2;
-USE mechanic_shop_v2;
+DROP DATABASE IF EXISTS mechanic_shop_v3;
+CREATE DATABASE mechanic_shop_v3;
+USE mechanic_shop_v3;
 
 -- Note: Flask-Migrate will create the tables
 -- Run this script first, then run: flask db upgrade

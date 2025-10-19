@@ -3,6 +3,7 @@ from flask import request, jsonify
 from marshmallow import ValidationError
 from sqlalchemy import select
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
+from flasgger import swag_from
 from application.blueprints.auth import auth_bp
 from application.blueprints.auth.authSchemas import register_schema, login_schema
 from application.blueprints.customer.customerSchemas import customer_schema
@@ -17,7 +18,80 @@ from application.extensions import db, limiter
 def register():
     """
     Register a new customer account
-    Creates a new customer with hashed password and returns JWT token
+    ---
+    tags:
+      - Authentication
+    summary: Register a new customer
+    description: Creates a new customer account with hashed password and returns JWT access token
+    parameters:
+      - in: body
+        name: body
+        description: Customer registration data
+        required: true
+        schema:
+          type: object
+          required:
+            - first_name
+            - last_name
+            - email
+            - password
+            - phone
+          properties:
+            first_name:
+              type: string
+              example: John
+            last_name:
+              type: string
+              example: Doe
+            email:
+              type: string
+              format: email
+              example: john.doe@example.com
+            password:
+              type: string
+              format: password
+              example: SecurePassword123!
+            phone:
+              type: string
+              example: 555-123-4567
+    responses:
+      201:
+        description: Customer registered successfully
+        schema:
+          type: object
+          properties:
+            message:
+              type: string
+              example: Customer registered successfully
+            access_token:
+              type: string
+              example: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...
+            customer:
+              type: object
+              properties:
+                customer_id:
+                  type: integer
+                  example: 1
+                first_name:
+                  type: string
+                  example: John
+                last_name:
+                  type: string
+                  example: Doe
+                email:
+                  type: string
+                  example: john.doe@example.com
+                phone:
+                  type: string
+                  example: 555-123-4567
+      400:
+        description: Bad request - validation error or email already exists
+        schema:
+          type: object
+          properties:
+            error:
+              type: string
+              example: Email already registered
     """
     # Check if request has JSON data
     if not request.json:
@@ -62,7 +136,70 @@ def register():
 def login():
     """
     Login with email and password
-    Returns JWT token if credentials are valid
+    ---
+    tags:
+      - Authentication
+    summary: Login to get access token
+    description: Authenticate with email and password to receive a JWT access token
+    parameters:
+      - in: body
+        name: body
+        description: Login credentials
+        required: true
+        schema:
+          type: object
+          required:
+            - email
+            - password
+          properties:
+            email:
+              type: string
+              format: email
+              example: john.doe@example.com
+            password:
+              type: string
+              format: password
+              example: SecurePassword123!
+    responses:
+      200:
+        description: Login successful
+        schema:
+          type: object
+          properties:
+            message:
+              type: string
+              example: Login successful
+            access_token:
+              type: string
+              example: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...
+            customer:
+              type: object
+              properties:
+                customer_id:
+                  type: integer
+                  example: 1
+                first_name:
+                  type: string
+                  example: John
+                last_name:
+                  type: string
+                  example: Doe
+                email:
+                  type: string
+                  example: john.doe@example.com
+                phone:
+                  type: string
+                  example: 555-123-4567
+      401:
+        description: Unauthorized - invalid credentials
+        schema:
+          type: object
+          properties:
+            error:
+              type: string
+              example: Invalid email or password
+      400:
+        description: Bad request - validation error
     """
     # Check if request has JSON data
     if not request.json:
@@ -99,7 +236,44 @@ def login():
 def get_current_user():
     """
     Get current authenticated user information
-    Requires valid JWT token in Authorization header
+    ---
+    tags:
+      - Authentication
+    summary: Get current user
+    description: Retrieves the currently authenticated user's information using JWT token
+    security:
+      - Bearer: []
+    responses:
+      200:
+        description: Current user information retrieved successfully
+        schema:
+          type: object
+          properties:
+            customer_id:
+              type: integer
+              example: 1
+            first_name:
+              type: string
+              example: John
+            last_name:
+              type: string
+              example: Doe
+            email:
+              type: string
+              example: john.doe@example.com
+            phone:
+              type: string
+              example: 555-123-4567
+      404:
+        description: Customer not found
+        schema:
+          type: object
+          properties:
+            error:
+              type: string
+              example: Customer not found
+      401:
+        description: Unauthorized - missing or invalid JWT token
     """
     # Get customer ID from JWT token (convert from string back to int)
     current_customer_id = int(get_jwt_identity())

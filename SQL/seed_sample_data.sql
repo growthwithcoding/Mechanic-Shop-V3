@@ -1,7 +1,7 @@
--- Sample Data Seeding Script for Mechanic Shop V2
+-- Sample Data Seeding Script for Mechanic Shop V3
 -- Run this after running flask db upgrade to populate database with test data
 
-USE mechanic_shop_v2;
+USE mechanic_shop_v3;
 
 -- Note: All test accounts use password 'password123'
 -- Password hash generated with bcrypt: $2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewY5lW7QK5JxvZvq

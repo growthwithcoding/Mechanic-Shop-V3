@@ -1,6 +1,6 @@
 # 🧪 Postman API Testing Guide - Step by Step
 
-**Complete walkthrough for testing the Mechanic Shop API V2**
+**Complete walkthrough for testing the Mechanic Shop API V3**
 
 This guide will walk you through testing every endpoint of the API, one step at a time. Follow each step in order for best results.
 
@@ -13,20 +13,20 @@ This guide will walk you through testing every endpoint of the API, one step at 
 1. **Open Postman**
    - If you don't have Postman, download it from [postman.com](https://www.postman.com/downloads/)
 
-2. **Import the V2 Collection**
+2. **Import the V3 Collection**
    - Click **Import** button (top left)
-   - Navigate to the project folder: `k:\Mechanic-Shop-V2\Postman`
-   - Select `Mechanic_Shop_API_V2.postman_collection.json`
+   - Navigate to the project folder: `k:\Mechanic-Shop-V3\Postman`
+   - Select `Mechanic_Shop_API_V3.postman_collection.json`
    - Click **Import**
 
-3. **Import the V2 Environment**
+3. **Import the V3 Environment**
    - Click **Import** again
-   - Select `Mechanic_Shop_API_V2.postman_environment.json`
+   - Select `Mechanic_Shop_API_V3.postman_environment.json`
    - Click **Import**
 
 4. **Select the Environment**
    - In the top-right corner, click the environment dropdown
-   - Select **"Mechanic Shop V2 - Local"**
+   - Select **"Mechanic Shop V3 - Local"**
    - You should see it highlighted/selected
 
 ### Step 2: Start Your API Server
@@ -159,7 +159,7 @@ You should see:
 
 ### Test 4: Get All Customers (Paginated)
 
-**Purpose**: Test pagination feature (V2 Advanced Feature)
+**Purpose**: Test pagination feature (V3 Advanced Feature)
 
 **Steps**:
 1. Expand **"2. Customers (Paginated)"** folder
@@ -193,7 +193,7 @@ You should see:
 **What Just Happened**:
 - ✅ Retrieved paginated customer list
 - ✅ Got pagination metadata
-- 🆕 **V2 Feature**: Pagination with full metadata
+- 🆕 **V3 Feature**: Pagination with full metadata
 
 **Try This**: Change pagination parameters
 - Edit the URL: `?page=1&per_page=5`
@@ -423,7 +423,7 @@ You should see:
 
 ### Test 13: ✅ GET All Mechanics (CACHED)
 
-**Purpose**: Retrieve all mechanics (ASSIGNMENT + V2 CACHING)
+**Purpose**: Retrieve all mechanics (ASSIGNMENT + V3 CACHING)
 
 **Steps**:
 1. Click **"✅ GET All Mechanics (CACHED)"**
@@ -456,7 +456,7 @@ You should see:
 
 **What Just Happened**:
 - ✅ **ASSIGNMENT**: GET /mechanics endpoint working
-- 🆕 **V2 Feature**: Response cached for 5 minutes
+- 🆕 **V3 Feature**: Response cached for 5 minutes
 - ✅ Second request should be much faster (cached)
 
 ---
@@ -490,7 +490,7 @@ You should see:
 
 ### Test 15: 🆕 GET Mechanics by Activity
 
-**Purpose**: Sort mechanics by ticket count (V2 ADVANCED FEATURE)
+**Purpose**: Sort mechanics by ticket count (V3 ADVANCED FEATURE)
 
 **Steps**:
 1. Click **"🆕 GET Mechanics by Activity"**
@@ -514,7 +514,7 @@ You should see:
 ```
 
 **What Just Happened**:
-- 🆕 **V2 ADVANCED**: Mechanics sorted by activity level
+- 🆕 **V3 ADVANCED**: Mechanics sorted by activity level
 - ✅ Custom sorting using relationship counts
 - ✅ Filtering options (active_only parameter)
 
@@ -774,7 +774,7 @@ You should see:
 
 ### Test 25: 🆕 BULK EDIT Mechanics
 
-**Purpose**: Add/remove multiple mechanics in one request (V2 ADVANCED)
+**Purpose**: Add/remove multiple mechanics in one request (V3 ADVANCED)
 
 **Steps**:
 1. Click **"🆕 BULK EDIT Mechanics"**
@@ -793,7 +793,7 @@ You should see:
 ```
 
 **What Just Happened**:
-- 🆕 **V2 ADVANCED**: Bulk operations endpoint
+- 🆕 **V3 ADVANCED**: Bulk operations endpoint
 - ✅ Multiple mechanics added in single request
 - ✅ Efficient batch processing
 
@@ -850,11 +850,11 @@ You should see:
 
 ---
 
-## 📦 Phase 6: Inventory Management (V2 FEATURE)
+## 📦 Phase 6: Inventory Management (V3 FEATURE)
 
 ### Test 28: CREATE Part (Brake Pads)
 
-**Purpose**: Add part to inventory (V2 FEATURE)
+**Purpose**: Add part to inventory (V3 FEATURE)
 
 **Steps**:
 1. Expand **"6. Inventory - Parts"** folder
@@ -879,7 +879,7 @@ You should see:
 ```
 
 **What Just Happened**:
-- 🆕 **V2 FEATURE**: Inventory system active
+- 🆕 **V3 FEATURE**: Inventory system active
 - ✅ Part ID saved to `{{part_id}}` variable
 - ✅ Cost stored in cents for precision
 
@@ -914,7 +914,7 @@ You should see:
 
 ### Test 30: GET Low Stock Parts
 
-**Purpose**: Filter parts needing reorder (V2 FEATURE)
+**Purpose**: Filter parts needing reorder (V3 FEATURE)
 
 **Steps**:
 1. Click **"GET Low Stock Parts"**
@@ -929,7 +929,7 @@ You should see:
 Currently empty because part has 25 in stock (above reorder level of 5).
 
 **What Just Happened**:
-- 🆕 **V2 FEATURE**: Low stock filtering
+- 🆕 **V3 FEATURE**: Low stock filtering
 - ✅ Automatic reorder alerts
 
 ---
@@ -983,7 +983,7 @@ Currently empty because part has 25 in stock (above reorder level of 5).
 
 ### Test 33: ADJUST Part Quantity
 
-**Purpose**: Increase/decrease inventory quantity (V2 FEATURE)
+**Purpose**: Increase/decrease inventory quantity (V3 FEATURE)
 
 **Steps**:
 1. Click **"ADJUST Part Quantity"**
@@ -1006,7 +1006,7 @@ Currently empty because part has 25 in stock (above reorder level of 5).
 ```
 
 **What Just Happened**:
-- 🆕 **V2 FEATURE**: Inventory adjustment tracking
+- 🆕 **V3 FEATURE**: Inventory adjustment tracking
 - ✅ Quantity increased by 10 (25 → 35)
 
 **Try This**: Test negative adjustment
@@ -1017,7 +1017,7 @@ Currently empty because part has 25 in stock (above reorder level of 5).
 
 ### Test 34: ADD Part to Ticket
 
-**Purpose**: Install part on service ticket (V2 FEATURE)
+**Purpose**: Install part on service ticket (V3 FEATURE)
 
 **Steps**:
 1. Click **"ADD Part to Ticket"**
@@ -1039,7 +1039,7 @@ Currently empty because part has 25 in stock (above reorder level of 5).
 ```
 
 **What Just Happened**:
-- 🆕 **V2 FEATURE**: Parts integrated with tickets
+- 🆕 **V3 FEATURE**: Parts integrated with tickets
 - ✅ Inventory automatically decremented (35 → 34)
 - ✅ Cost with markup calculated (48.00 + 30% = 62.40)
 - ✅ Warranty tracking enabled
@@ -1080,7 +1080,7 @@ Currently empty because part has 25 in stock (above reorder level of 5).
 - Mechanic Assignment to Tickets
 - Mechanic Removal from Tickets
 
-**🆕 V2 ADVANCED FEATURES:**
+**🆕 V3 ADVANCED FEATURES:**
 - Rate Limiting (Registration, Login)
 - JWT Authentication
 - Caching (Mechanics list)
@@ -1223,7 +1223,7 @@ Use this checklist to track your testing progress:
 - [ ] UPDATE Service Ticket
 - [ ] DELETE Service Ticket
 
-### Phase 6: Inventory (V2 FEATURE) ✅
+### Phase 6: Inventory (V3 FEATURE) ✅
 - [ ] CREATE Part
 - [ ] GET All Parts
 - [ ] GET Low Stock Parts
@@ -1241,7 +1241,7 @@ Use this checklist to track your testing progress:
 - [ ] Proper authentication on all routes
 - [ ] Marshmallow schemas validating data
 
-### V2 Features Verification ✅
+### V3 Features Verification ✅
 - [ ] Rate limiting functioning
 - [ ] Caching working (faster 2nd request)
 - [ ] JWT tokens auto-saving
@@ -1255,7 +1255,7 @@ Use this checklist to track your testing progress:
 
 ## 🎉 Congratulations!
 
-You've successfully tested the complete Mechanic Shop API V2!
+You've successfully tested the complete Mechanic Shop API V3!
 
 ### What You've Learned:
 - ✅ How to test RESTful API endpoints
@@ -1289,4 +1289,4 @@ If you encounter issues:
 
 **Happy Testing! 🚀**
 
-*This testing guide covers all assignment requirements plus advanced V2 features for the Mechanic Shop Management API.*
+*This testing guide covers all assignment requirements plus advanced V3 features for the Mechanic Shop Management API.*

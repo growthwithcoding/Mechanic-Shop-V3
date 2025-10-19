@@ -14,6 +14,81 @@ from application.extensions import db, limiter, cache
 @jwt_required()
 @limiter.limit("10 per hour")
 def create_mechanic():
+    """
+    Create a new mechanic
+    ---
+    tags:
+      - Mechanics
+    summary: Create a new mechanic
+    description: Creates a new mechanic in the system
+    security:
+      - Bearer: []
+    parameters:
+      - in: body
+        name: body
+        description: Mechanic data
+        required: true
+        schema:
+          type: object
+          required:
+            - first_name
+            - last_name
+            - email
+            - phone
+            - salary
+          properties:
+            first_name:
+              type: string
+              example: Mike
+            last_name:
+              type: string
+              example: Mechanic
+            email:
+              type: string
+              format: email
+              example: mike@mechanicshop.com
+            phone:
+              type: string
+              example: 555-111-2222
+            salary:
+              type: number
+              format: float
+              example: 50000.00
+            is_active:
+              type: boolean
+              example: true
+    responses:
+      201:
+        description: Mechanic created successfully
+        schema:
+          type: object
+          properties:
+            mechanic_id:
+              type: integer
+              example: 1
+            first_name:
+              type: string
+              example: Mike
+            last_name:
+              type: string
+              example: Mechanic
+            email:
+              type: string
+              example: mike@mechanicshop.com
+            phone:
+              type: string
+              example: 555-111-2222
+            salary:
+              type: number
+              example: 50000.00
+            is_active:
+              type: boolean
+              example: true
+      400:
+        description: Bad request - validation error or duplicate email
+      401:
+        description: Unauthorized - missing or invalid JWT token
+    """
     if not request.json:
         return jsonify({"error": "No JSON data provided"}), 400
     
@@ -40,6 +115,47 @@ def create_mechanic():
 @jwt_required()
 @cache.cached(timeout=300)
 def get_mechanics():
+    """
+    Get all mechanics
+    ---
+    tags:
+      - Mechanics
+    summary: Get all mechanics
+    description: Retrieves a list of all mechanics in the system (cached for 5 minutes)
+    security:
+      - Bearer: []
+    responses:
+      200:
+        description: List of mechanics retrieved successfully
+        schema:
+          type: array
+          items:
+            type: object
+            properties:
+              mechanic_id:
+                type: integer
+                example: 1
+              first_name:
+                type: string
+                example: Mike
+              last_name:
+                type: string
+                example: Mechanic
+              email:
+                type: string
+                example: mike@mechanicshop.com
+              phone:
+                type: string
+                example: 555-111-2222
+              salary:
+                type: number
+                example: 50000.00
+              is_active:
+                type: boolean
+                example: true
+      401:
+        description: Unauthorized - missing or invalid JWT token
+    """
     query = select(Mechanic)
     mechanics = db.session.execute(query).scalars().all()
     return jsonify(mechanics_schema.dump(mechanics)), 200
@@ -51,6 +167,69 @@ def get_mechanics():
 @mechanic_bp.route("/by-activity", methods=['GET'])
 @jwt_required()
 def get_mechanics_by_activity():
+    """
+    Get mechanics sorted by activity
+    ---
+    tags:
+      - Mechanics
+    summary: Get mechanics sorted by activity level
+    description: |
+      Returns mechanics sorted by the number of tickets they've worked on (descending order).
+    
+      This endpoint demonstrates:
+      1. Accessing related data through SQLAlchemy relationships (ticket_mechanics)
+      2. Using len() on relationship lists to count related records
+      3. Custom sorting with lambda functions based on relationship data
+      4. Creating insightful queries that reveal business metrics
+    security:
+      - Bearer: []
+    parameters:
+      - in: query
+        name: order
+        type: string
+        enum: [desc, asc]
+        default: desc
+        description: Sort order (desc for most active first, asc for least active first)
+      - in: query
+        name: active_only
+        type: string
+        enum: [true, false]
+        default: false
+        description: Filter only active mechanics
+    responses:
+      200:
+        description: List of mechanics sorted by activity
+        schema:
+          type: array
+          items:
+            type: object
+            properties:
+              mechanic_id:
+                type: integer
+                example: 1
+              full_name:
+                type: string
+                example: Mike Mechanic
+              email:
+                type: string
+                example: mike@mechanicshop.com
+              phone:
+                type: string
+                example: 555-111-2222
+              salary:
+                type: number
+                example: 50000.00
+              is_active:
+                type: boolean
+                example: true
+              ticket_count:
+                type: integer
+                example: 15
+                description: Number of tickets this mechanic has worked on
+      401:
+        description: Unauthorized - missing or invalid JWT token
+    """
+    # Original docstring content:
     """
     Returns mechanics sorted by the number of tickets they've worked on (descending order).
     
@@ -107,6 +286,57 @@ def get_mechanics_by_activity():
 @mechanic_bp.route("/<int:mechanic_id>", methods=['GET'])
 @jwt_required()
 def get_mechanic(mechanic_id):
+    """
+    Get a specific mechanic
+    ---
+    tags:
+      - Mechanics
+    summary: Get mechanic by ID
+    description: Retrieves a specific mechanic's information including their ticket count
+    security:
+      - Bearer: []
+    parameters:
+      - in: path
+        name: mechanic_id
+        type: integer
+        required: true
+        description: The mechanic's ID
+        example: 1
+    responses:
+      200:
+        description: Mechanic retrieved successfully
+        schema:
+          type: object
+          properties:
+            mechanic_id:
+              type: integer
+              example: 1
+            first_name:
+              type: string
+              example: Mike
+            last_name:
+              type: string
+              example: Mechanic
+            email:
+              type: string
+              example: mike@mechanicshop.com
+            phone:
+              type: string
+              example: 555-111-2222
+            salary:
+              type: number
+              example: 50000.00
+            is_active:
+              type: boolean
+              example: true
+            ticket_count:
+              type: integer
+              example: 15
+      404:
+        description: Mechanic not found
+      401:
+        description: Unauthorized - missing or invalid JWT token
+    """
     mechanic = db.session.get(Mechanic, mechanic_id)
     
     if mechanic:
@@ -120,6 +350,78 @@ def get_mechanic(mechanic_id):
 @mechanic_bp.route("/<int:mechanic_id>", methods=['PUT'])
 @jwt_required()
 def update_mechanic(mechanic_id):
+    """
+    Update a mechanic
+    ---
+    tags:
+      - Mechanics
+    summary: Update mechanic information
+    description: Updates an existing mechanic's information
+    security:
+      - Bearer: []
+    parameters:
+      - in: path
+        name: mechanic_id
+        type: integer
+        required: true
+        description: The mechanic's ID
+        example: 1
+      - in: body
+        name: body
+        description: Updated mechanic data
+        required: true
+        schema:
+          type: object
+          required:
+            - first_name
+            - last_name
+            - email
+            - phone
+            - salary
+          properties:
+            first_name:
+              type: string
+              example: Michael
+            last_name:
+              type: string
+              example: Mechanic
+            email:
+              type: string
+              example: mike@mechanicshop.com
+            phone:
+              type: string
+              example: 555-111-2222
+            salary:
+              type: number
+              example: 55000.00
+            is_active:
+              type: boolean
+              example: true
+    responses:
+      200:
+        description: Mechanic updated successfully
+        schema:
+          type: object
+          properties:
+            mechanic_id:
+              type: integer
+              example: 1
+            first_name:
+              type: string
+              example: Michael
+            email:
+              type: string
+              example: mike@mechanicshop.com
+            salary:
+              type: number
+              example: 55000.00
+      404:
+        description: Mechanic not found
+      400:
+        description: Bad request - validation error
+      401:
+        description: Unauthorized - missing or invalid JWT token
+    """
     mechanic = db.session.get(Mechanic, mechanic_id)
     
     if not mechanic:
@@ -145,6 +447,36 @@ def update_mechanic(mechanic_id):
 @mechanic_bp.route("/<int:mechanic_id>", methods=['DELETE'])
 @jwt_required()
 def delete_mechanic(mechanic_id):
+    """
+    Delete a mechanic
+    ---
+    tags:
+      - Mechanics
+    summary: Delete a mechanic
+    description: Deletes a mechanic from the system
+    security:
+      - Bearer: []
+    parameters:
+      - in: path
+        name: mechanic_id
+        type: integer
+        required: true
+        description: The mechanic's ID to delete
+        example: 1
+    responses:
+      200:
+        description: Mechanic deleted successfully
+        schema:
+          type: object
+          properties:
+            message:
+              type: string
+              example: Mechanic id: 1, successfully deleted.
+      404:
+        description: Mechanic not found
+      401:
+        description: Unauthorized - missing or invalid JWT token
+    """
     mechanic = db.session.get(Mechanic, mechanic_id)
     
     if not mechanic:

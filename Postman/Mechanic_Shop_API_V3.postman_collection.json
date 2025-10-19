@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "mechanic-shop-v2-collection",
-		"name": "Mechanic Shop API V2 - Complete Testing Suite",
-		"description": "Comprehensive V2 API testing collection for continuous testing after V1 presentation.\n\n✨ V2 FEATURES:\n- Rate Limiting & Caching\n- JWT Token Authentication\n- Advanced Queries (Pagination, Sorting)\n- Inventory Management\n- Parts Integration\n- Bulk Operations\n\n🎯 ASSIGNMENT COVERAGE:\n✅ Full CRUD for Mechanics\n✅ Full CRUD for Service Tickets\n✅ Mechanic Assignment/Removal\n✅ All endpoints authenticated",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+		"_postman_id": "mechanic-shop-v3-collection",
+		"name": "Mechanic Shop API V3 - Complete Testing Suite",
+		"description": "Comprehensive V3 API testing collection for continuous testing after V1 presentation.\n\n✨ V3 FEATURES:\n- Rate Limiting & Caching\n- JWT Token Authentication\n- Advanced Queries (Pagination, Sorting)\n- Inventory Management\n- Parts Integration\n- Bulk Operations\n\n🎯 ASSIGNMENT COVERAGE:\n✅ Full CRUD for Mechanics\n✅ Full CRUD for Service Tickets\n✅ Mechanic Assignment/Removal\n✅ All endpoints authenticated",
+		"schema": "https://schema.getpostman.com/json/collection/v3.1.0/collection.json"
 	},
 	"item": [
 		{
@@ -36,7 +36,7 @@
 							"host": ["{{base_url}}"],
 							"path": ["auth", "register"]
 						},
-						"description": "🆕 V2: Rate Limited (3/hour)"
+						"description": "🆕 V3: Rate Limited (3/hour)"
 					}
 				},
 				{
@@ -65,7 +65,7 @@
 							"host": ["{{base_url}}"],
 							"path": ["auth", "login"]
 						},
-						"description": "🆕 V2: Rate Limited (5/min)"
+						"description": "🆕 V3: Rate Limited (5/min)"
 					}
 				},
 				{
@@ -99,7 +99,7 @@
 								{"key": "per_page", "value": "10"}
 							]
 						},
-						"description": "🆕 V2: Pagination with metadata"
+						"description": "🆕 V3: Pagination with metadata"
 					}
 				},
 				{
@@ -216,7 +216,7 @@
 		},
 		{
 			"name": "4. Mechanics - FULL CRUD",
-			"description": "✅ ASSIGNMENT: Complete CRUD + V2 Advanced Features",
+			"description": "✅ ASSIGNMENT: Complete CRUD + V3 Advanced Features",
 			"item": [
 				{
 					"name": "✅ CREATE Mechanic 1",
@@ -322,7 +322,7 @@
 							"host": ["{{base_url}}"],
 							"path": ["mechanics"]
 						},
-						"description": "✅ ASSIGNMENT: GET /\n🆕 V2: Cached 5 min"
+						"description": "✅ ASSIGNMENT: GET /\n🆕 V3: Cached 5 min"
 					}
 				},
 				{
@@ -352,7 +352,7 @@
 								{"key": "active_only", "value": "false"}
 							]
 						},
-						"description": "🆕 V2 ADVANCED: Sort by ticket count"
+						"description": "🆕 V3 ADVANCED: Sort by ticket count"
 					}
 				},
 				{
@@ -551,7 +551,7 @@
 							"host": ["{{base_url}}"],
 							"path": ["service_tickets", "{{ticket_id}}", "edit"]
 						},
-						"description": "🆕 V2 ADVANCED: Bulk add/remove"
+						"description": "🆕 V3 ADVANCED: Bulk add/remove"
 					}
 				},
 				{
@@ -590,7 +590,7 @@
 		},
 		{
 			"name": "6. Inventory - Parts",
-			"description": "🆕 V2 FEATURE: Inventory Management",
+			"description": "🆕 V3 FEATURE: Inventory Management",
 			"item": [
 				{
 					"name": "CREATE Part (Brake Pads)",

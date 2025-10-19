@@ -1,4 +1,4 @@
-# Database Migrations for Mechanic Shop V2
+# Database Migrations for Mechanic Shop V3
 
 This folder contains Alembic/Flask-Migrate database migrations for version control of the database schema.
 
@@ -6,7 +6,7 @@ This folder contains Alembic/Flask-Migrate database migrations for version contr
 
 **001_initial_schema.py** - Complete initial schema with all 11 models and junction tables
 
-This migration creates all tables from scratch for Mechanic Shop V2:
+This migration creates all tables from scratch for Mechanic Shop V3:
 
 ### Tables Created:
 1. **customers** - Customer accounts with authentication

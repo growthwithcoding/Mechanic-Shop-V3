@@ -1,11 +1,11 @@
-# SQL Scripts for Mechanic Shop V2
+# SQL Scripts for Mechanic Shop V3
 
 This folder contains SQL scripts for database setup and seeding.
 
 ## Files
 
 ### 1. recreate_database.sql
-**Purpose**: Drops and recreates the `mechanic_shop_v2` database
+**Purpose**: Drops and recreates the `mechanic_shop_v3` database
 
 **When to use**: 
 - Initial setup
@@ -47,7 +47,7 @@ flask db upgrade
 flask db upgrade
 
 # Then seed the data
-mysql -u root -p mechanic_shop_v2 < SQL/seed_sample_data.sql
+mysql -u root -p mechanic_shop_v3 < SQL/seed_sample_data.sql
 ```
 
 **Note**: Customers, Vehicles, and Service Tickets should be created via API endpoints to ensure proper password hashing and validation.
@@ -84,7 +84,7 @@ set FLASK_APP=app.py  # Windows
 flask db upgrade
 
 # 3. Seed Sample Data
-mysql -u root -p mechanic_shop_v2 < SQL/seed_sample_data.sql
+mysql -u root -p mechanic_shop_v3 < SQL/seed_sample_data.sql
 
 # 4. (Optional) Fix Permissions if needed
 mysql -u root -p < SQL/fix_user_permissions.sql

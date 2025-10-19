@@ -14,7 +14,74 @@ from application.extensions import db, limiter
 @jwt_required()
 @limiter.limit("20 per hour")
 def create_part():
-    """Create a new part in inventory"""
+    """
+    Create a new part in inventory
+    ---
+    tags:
+      - Inventory
+    summary: Create a new part
+    description: Creates a new part in the inventory system
+    security:
+      - Bearer: []
+    parameters:
+      - in: body
+        name: body
+        description: Part data
+        required: true
+        schema:
+          type: object
+          required:
+            - part_number
+            - name
+            - category
+            - current_cost_cents
+            - quantity_in_stock
+            - reorder_threshold
+          properties:
+            part_number:
+              type: string
+              example: BRK-001
+            name:
+              type: string
+              example: Brake Pad Set
+            description:
+              type: string
+              example: Front brake pads for most vehicles
+            category:
+              type: string
+              example: Brakes
+            current_cost_cents:
+              type: integer
+              example: 4500
+            quantity_in_stock:
+              type: integer
+              example: 25
+            reorder_threshold:
+              type: integer
+              example: 5
+    responses:
+      201:
+        description: Part created successfully
+        schema:
+          type: object
+          properties:
+            part_id:
+              type: integer
+            part_number:
+              type: string
+            name:
+              type: string
+            category:
+              type: string
+            current_cost_cents:
+              type: integer
+            quantity_in_stock:
+              type: integer
+      400:
+        description: Bad request - validation error or duplicate part number
+      401:
+        description: Unauthorized
+    """
     if not request.json:
         return jsonify({"error": "No JSON data provided"}), 400
     
@@ -39,7 +106,48 @@ def create_part():
 @inventory_bp.route("", methods=['GET'])
 @jwt_required()
 def get_parts():
-    """Get all parts in inventory with optional filtering"""
+    """
+    Get all parts in inventory
+    ---
+    tags:
+      - Inventory
+    summary: Get all parts
+    description: Retrieves all parts with optional category filtering and low stock detection
+    security:
+      - Bearer: []
+    parameters:
+      - in: query
+        name: category
+        type: string
+        description: Filter by category
+        example: Brakes
+      - in: query
+        name: low_stock
+        type: string
+        enum: [true, false]
+        default: false
+        description: Filter for low stock items
+    responses:
+      200:
+        description: List of parts
+        schema:
+          type: array
+          items:
+            type: object
+            properties:
+              part_id:
+                type: integer
+              part_number:
+                type: string
+              name:
+                type: string
+              category:
+                type: string
+              quantity_in_stock:
+                type: integer
+      401:
+        description: Unauthorized
+    """
     # Query parameters for filtering
     low_stock = request.args.get('low_stock', 'false').lower() == 'true'
     category = request.args.get('category')
@@ -63,7 +171,48 @@ def get_parts():
 @inventory_bp.route("/<int:part_id>", methods=['GET'])
 @jwt_required()
 def get_part(part_id):
-    """Get a specific part by ID"""
+    """
+    Get a specific part
+    ---
+    tags:
+      - Inventory
+    summary: Get part by ID
+    description: Retrieves a specific part's information
+    security:
+      - Bearer: []
+    parameters:
+      - in: path
+        name: part_id
+        type: integer
+        required: true
+        description: The part's ID
+    responses:
+      200:
+        description: Part retrieved successfully
+        schema:
+          type: object
+          properties:
+            part_id:
+              type: integer
+            part_number:
+              type: string
+            name:
+              type: string
+            description:
+              type: string
+            category:
+              type: string
+            current_cost_cents:
+              type: integer
+            quantity_in_stock:
+              type: integer
+            reorder_threshold:
+              type: integer
+      404:
+        description: Part not found
+      401:
+        description: Unauthorized
+    """
     part = db.session.get(Part, part_id)
     
     if part:
@@ -75,7 +224,57 @@ def get_part(part_id):
 @inventory_bp.route("/<int:part_id>", methods=['PUT'])
 @jwt_required()
 def update_part(part_id):
-    """Update a part in inventory"""
+    """
+    Update a part
+    ---
+    tags:
+      - Inventory
+    summary: Update part information
+    description: Updates an existing part's information
+    security:
+      - Bearer: []
+    parameters:
+      - in: path
+        name: part_id
+        type: integer
+        required: true
+      - in: body
+        name: body
+        required: true
+        schema:
+          type: object
+          required:
+            - part_number
+            - name
+            - category
+            - current_cost_cents
+            - quantity_in_stock
+            - reorder_threshold
+          properties:
+            part_number:
+              type: string
+            name:
+              type: string
+            description:
+              type: string
+            category:
+              type: string
+            current_cost_cents:
+              type: integer
+            quantity_in_stock:
+              type: integer
+            reorder_threshold:
+              type: integer
+    responses:
+      200:
+        description: Part updated successfully
+      404:
+        description: Part not found
+      400:
+        description: Bad request
+      401:
+        description: Unauthorized
+    """
     part = db.session.get(Part, part_id)
     
     if not part:
@@ -109,7 +308,33 @@ def update_part(part_id):
 @inventory_bp.route("/<int:part_id>", methods=['DELETE'])
 @jwt_required()
 def delete_part(part_id):
-    """Delete a part from inventory"""
+    """
+    Delete a part
+    ---
+    tags:
+      - Inventory
+    summary: Delete a part
+    description: Deletes a part from inventory
+    security:
+      - Bearer: []
+    parameters:
+      - in: path
+        name: part_id
+        type: integer
+        required: true
+    responses:
+      200:
+        description: Part deleted successfully
+        schema:
+          type: object
+          properties:
+            message:
+              type: string
+      404:
+        description: Part not found
+      401:
+        description: Unauthorized
+    """
     part = db.session.get(Part, part_id)
     
     if not part:
@@ -125,12 +350,53 @@ def delete_part(part_id):
 @jwt_required()
 def adjust_part_quantity(part_id):
     """
-    Adjust the quantity of a part in inventory
-    
-    Request body:
-    {
-        "adjustment": 10    # Positive to add, negative to subtract
-    }
+    Adjust part quantity
+    ---
+    tags:
+      - Inventory
+    summary: Adjust part quantity
+    description: Adjusts the quantity of a part in inventory (positive to add, negative to subtract)
+    security:
+      - Bearer: []
+    parameters:
+      - in: path
+        name: part_id
+        type: integer
+        required: true
+      - in: body
+        name: body
+        required: true
+        schema:
+          type: object
+          required:
+            - adjustment
+          properties:
+            adjustment:
+              type: integer
+              example: 10
+              description: Positive to add, negative to subtract
+    responses:
+      200:
+        description: Quantity adjusted successfully
+        schema:
+          type: object
+          properties:
+            message:
+              type: string
+            part:
+              type: object
+            adjustment:
+              type: integer
+            previous_quantity:
+              type: integer
+            new_quantity:
+              type: integer
+      400:
+        description: Bad request - would result in negative quantity
+      404:
+        description: Part not found
+      401:
+        description: Unauthorized
     """
     part = db.session.get(Part, part_id)
     

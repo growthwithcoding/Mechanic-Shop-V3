@@ -1,6 +1,7 @@
 from flask import Flask
 from config import config
 from application.extensions import db, ma, limiter, cache, jwt, migrate
+from flasgger import Swagger
 
 
 def create_app(config_name='default'):
@@ -27,6 +28,47 @@ def create_app(config_name='default'):
     cache.init_app(app)
     jwt.init_app(app)
     migrate.init_app(app, db)
+    
+    # Initialize Swagger
+    swagger_config = {
+        "headers": [],
+        "specs": [
+            {
+                "endpoint": 'apispec',
+                "route": '/apispec.json',
+                "rule_filter": lambda rule: True,
+                "model_filter": lambda tag: True,
+            }
+        ],
+        "static_url_path": "/flasgger_static",
+        "swagger_ui": True,
+        "specs_route": "/api/docs"
+    }
+    
+    swagger_template = {
+        "swagger": "2.0",
+        "info": {
+            "title": "Mechanic Shop API V3",
+            "description": "A comprehensive RESTful API for managing a mechanic shop, including customers, vehicles, mechanics, inventory, and service tickets",
+            "version": "3.0.0",
+            "contact": {
+                "name": "API Support",
+                "email": "support@mechanicshop.com"
+            }
+        },
+        "basePath": "/",
+        "schemes": ["http", "https"],
+        "securityDefinitions": {
+            "Bearer": {
+                "type": "apiKey",
+                "name": "Authorization",
+                "in": "header",
+                "description": "JWT Authorization header using the Bearer scheme. Example: 'Bearer {token}'"
+            }
+        }
+    }
+    
+    Swagger(app, config=swagger_config, template=swagger_template)
     
     # Register blueprints
     from application.blueprints.customer import customer_bp

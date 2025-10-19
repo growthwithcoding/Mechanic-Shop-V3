@@ -48,6 +48,8 @@ coverage.xml
 *.py,cover
 .hypothesis/
 .pytest_cache/
+test-results/
+test_output/
 
 # Translations
 *.mo
@@ -62,12 +64,15 @@ db.sqlite3-journal
 # Flask stuff:
 instance/
 .webassets-cache
+flask_session/
 
 # Scrapy stuff:
 .scrapy
 
 # Sphinx documentation
 docs/_build/
+docs/_static/
+docs/_templates/
 
 # PyBuilder
 target/
@@ -161,6 +166,7 @@ logs/
 *.tmp
 *.temp
 *.bak
+*.backup
 
 # Flask-specific
 instance/
@@ -170,3 +176,52 @@ flask_session/
 # Migration temp files
 migrations/versions/*.pyc
 alembic.ini.bak
+
+# Swagger/API Documentation generated files
+swagger.json
+swagger.yaml
+apispec_*.json
+
+# Test artifacts
+.coverage
+htmlcov/
+.pytest_cache/
+tests/__pycache__/
+*.pyc
+
+# V3 Specific
+attr/
+attrs/
+bin/
+blinker/
+click/
+colorama/
+flasgger/
+flask/
+itsdangerous/
+jinja2/
+jinja2-*/
+jsonschema/
+jsonschema_specifications/
+markupsafe/
+mistune/
+packaging/
+pyyaml-*/
+referencing/
+rpds/
+six-*/
+typing_extensions-*/
+werkzeug/
+werkzeug-*/
+yaml/
+*.dist-info/
+New folder/
+
+# Documentation artifacts
+*.md.backup
+POSTMAN_TESTING.md.backup
+V3_IMPLEMENTATION_SUMMARY.md
+V3_UPGRADES_COMPLETE.md
+update_version_to_v3.py
+six.py
+typing_extensions.py

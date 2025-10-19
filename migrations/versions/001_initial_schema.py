@@ -1,4 +1,4 @@
-"""Initial schema for Mechanic Shop V2
+"""Initial schema for Mechanic Shop V3
 
 Revision ID: 001_initial_schema
 Revises: 

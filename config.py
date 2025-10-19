@@ -18,20 +18,20 @@ class DevelopmentConfig(Config):
     """Development configuration"""
     DEBUG = True
     SQLALCHEMY_DATABASE_URI = os.environ.get('DEV_DATABASE_URL') or \
-        'mysql+mysqlconnector://root:password@127.0.0.1/mechanic_shop_v2'
+        'mysql+mysqlconnector://root:password@127.0.0.1/mechanic_shop_v3'
 
 
 class TestingConfig(Config):
     """Testing configuration"""
     TESTING = True
     SQLALCHEMY_DATABASE_URI = os.environ.get('TEST_DATABASE_URL') or \
-        'mysql+mysqlconnector://root:password@127.0.0.1/mechanic_shop_v2_test'
+        'mysql+mysqlconnector://root:password@127.0.0.1/mechanic_shop_v3_test'
 
 
 class ProductionConfig(Config):
     """Production configuration"""
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
-        'mysql+mysqlconnector://root:password@127.0.0.1/mechanic_shop_v2'
+        'mysql+mysqlconnector://root:password@127.0.0.1/mechanic_shop_v3'
     
     @classmethod
     def init_app(cls, app):

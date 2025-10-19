@@ -3,7 +3,7 @@
 		"_postman_id": "mechanic-shop-api-collection",
 		"name": "Mechanic Shop API - Complete Collection",
 		"description": "Complete API testing collection for Mechanic Shop with all CRUD operations. All DELETE operations are at the END to allow full testing before demonstrating delete functionality.",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+		"schema": "https://schema.getpostman.com/json/collection/v3.1.0/collection.json"
 	},
 	"item": [
 		{

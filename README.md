@@ -1,18 +1,20 @@
-# Mechanic Shop Management API - V2
+# Mechanic Shop Management API - V3
 
 ![Python](https://img.shields.io/badge/python-3.11+-blue.svg)
 ![Flask](https://img.shields.io/badge/flask-3.0+-green.svg)
 ![SQLAlchemy](https://img.shields.io/badge/sqlalchemy-2.0+-red.svg)
 ![License](https://img.shields.io/badge/license-MIT-yellow.svg)
 
-An advanced RESTful API for managing automotive repair shop operations with rate limiting, caching, JWT authentication, and comprehensive inventory management. Built with Flask and SQLAlchemy using the Application Factory Pattern.
+An advanced RESTful API for managing automotive repair shop operations with comprehensive Swagger documentation, automated testing, JWT authentication, rate limiting, caching, and full inventory management. Built with Flask and SQLAlchemy using the Application Factory Pattern.
 
 ## 🎯 Project Overview
 
-This is the **advanced version** of the Mechanic Shop API, implementing sophisticated features including:
+This is **Version 3** of the Mechanic Shop API, implementing:
+- **Flask-Swagger Documentation** - Interactive API documentation with Swagger UI
+- **Comprehensive Testing** - unittest framework with positive/negative test cases
+- **JWT Token Authentication** - Secure customer and mechanic access
 - **Rate Limiting** - API protection against abuse
 - **Caching** - Performance optimization for frequently accessed data
-- **JWT Token Authentication** - Secure customer and mechanic access
 - **Advanced Query Operations** - Pagination, filtering, and custom sorting
 - **Inventory Management** - Complete parts tracking with stock management
 - **Many-to-Many Relationships** - Complex data modeling with junction tables
@@ -29,10 +31,13 @@ This is the **advanced version** of the Mechanic Shop API, implementing sophisti
 
 ## 📋 Table of Contents
 
+- [V3 Assignment Requirements](#-v3-assignment-requirements)
 - [Advanced Features](#-advanced-features-highlights)
 - [Installation](#-installation)
 - [Configuration](#️-configuration)
 - [Database Setup](#-database-setup)
+- [Swagger Documentation](#-swagger-documentation)
+- [Testing](#-testing)
 - [API Endpoints](#-api-endpoints)
 - [Rate Limiting & Caching](#-rate-limiting--caching)
 - [Authentication](#-authentication)
@@ -44,9 +49,115 @@ This is the **advanced version** of the Mechanic Shop API, implementing sophisti
 
 ---
 
+## 📝 V3 Assignment Requirements
+
+### Assignment: Documentation and Testing
+
+**Instructor:** Dylan Katina
+
+#### Documentation Requirements (Flask-Swagger)
+
+Utilizing Flask-Swagger and Flask-Swagger-UI to document each route:
+
+✅ **Each Route Documented With:**
+- [x] **Path**: Endpoint URL
+- [x] **Type**: Request method (POST, GET, PUT, DELETE)
+- [x] **Tag**: Category for route organization
+- [x] **Summary**: Brief description
+- [x] **Description**: Detailed explanation
+- [x] **Security**: Points to security definition (for token-authenticated routes)
+- [x] **Parameters**: Information about required data (POST/PUT requests)
+- [x] **Responses**: Response data format with examples
+
+✅ **Definitions:**
+- [x] **PayloadDefinition**: Defines incoming data shape (POST/PUT)
+- [x] **ResponseDefinitions**: Defines outgoing data shape with examples
+
+#### Testing Requirements (unittest)
+
+✅ **Test Implementation:**
+- [x] Created `tests/` folder inside project
+- [x] Test file for each blueprint:
+  - [x] `test_customer.py` - Customer & vehicle routes
+  - [x] `test_mechanic.py` - Mechanic routes
+  - [x] `test_service_ticket.py` - Service ticket routes
+  - [x] `test_inventory.py` - Inventory routes
+- [x] One test for every route in API
+- [x] Negative tests incorporated
+- [x] Tests executable with: `python -m unittest discover tests`
+
+**Status:** ✅ All requirements completed
+
+---
+
 ## ✨ Advanced Features Highlights
 
-### 1. Rate Limiting
+### 1. Swagger Documentation ✅ **V3 NEW**
+
+Complete interactive API documentation:
+
+```python
+# Swagger configuration in __init__.py
+swagger_config = {
+    "headers": [],
+    "specs": [{
+        "endpoint": 'apispec',
+        "route": '/apispec.json',
+        "rule_filter": lambda rule: True,
+        "model_filter": lambda tag: True,
+    }],
+    "static_url_path": "/flasgger_static",
+    "swagger_ui": True,
+    "specs_route": "/apidocs"
+}
+```
+
+**Features:**
+- Interactive UI at `/apidocs`
+- Try-it-out functionality for all endpoints
+- Complete request/response schemas
+- Authentication integration
+- Example payloads for all routes
+
+### 2. Comprehensive Testing ✅ **V3 NEW**
+
+Full test suite with 30+ tests:
+
+```python
+class TestMechanicRoutes(unittest.TestCase):
+    def setUp(self):
+        """Set up test client and database"""
+        self.app = create_app('testing')
+        self.client = self.app.test_client()
+        
+        with self.app.app_context():
+            db.create_all()
+            # Register test user and get token
+    
+    def test_create_mechanic(self):
+        """Test creating a mechanic"""
+        response = self.client.post('/mechanics', 
+            json={...},
+            headers={'Authorization': f'Bearer {self.token}'}
+        )
+        self.assertEqual(response.status_code, 201)
+    
+    def tearDown(self):
+        """Clean up after tests"""
+        with self.app.app_context():
+            db.session.remove()
+            db.drop_all()
+```
+
+**Test Coverage:**
+- Positive tests for all routes
+- Negative tests for error handling
+- Authentication tests
+- Validation tests
+- Edge case tests
+
+### 3. Rate Limiting
+
 Protects the API from abuse by limiting request frequency:
 
 ```python
@@ -65,7 +176,8 @@ def login():
 - **Create Service Ticket**: 10 requests per hour
 - **Create Inventory Part**: 20 requests per hour
 
-### 2. Caching
+### 4. Caching
+
 Improves performance by caching frequently accessed data:
 
 ```python
@@ -82,7 +194,7 @@ def get_mechanics():
 - Reduces database load on repeated requests
 - Automatically invalidated on updates
 
-### 3. JWT Token Authentication
+### 5. JWT Token Authentication
 
 **Token Generation:**
 ```python
@@ -105,7 +217,7 @@ def protected_route():
 - Bearer token format
 - Secure password hashing with Werkzeug
 
-### 4. Advanced Queries
+### 6. Advanced Queries
 
 #### **Pagination**
 Efficient data retrieval with page-based results:
@@ -160,7 +272,7 @@ PUT /service-tickets/1/edit
 }
 ```
 
-### 5. Inventory Management
+### 7. Inventory Management
 
 **Complete Parts Tracking:**
 - Part catalog with SKU management
@@ -200,8 +312,8 @@ POST /service-tickets/1/parts/5
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/growthwithcoding/Mechanic-Shop-V2.git
-   cd Mechanic-Shop-V2
+   git clone https://github.com/growthwithcoding/Mechanic-Shop-V3.git
+   cd Mechanic-Shop-V3
    ```
 
 2. **Create virtual environment**
@@ -222,7 +334,7 @@ POST /service-tickets/1/parts/5
 
 4. **Create MySQL database**
    ```sql
-   CREATE DATABASE mechanic_shop_v2;
+   CREATE DATABASE mechanic_shop_v3;
    ```
 
 5. **Configure environment variables**
@@ -230,7 +342,7 @@ POST /service-tickets/1/parts/5
    Create a `.env` file or set environment variables:
    ```bash
    # Database connection
-   DEV_DATABASE_URL=mysql+mysqlconnector://root:your_password@127.0.0.1/mechanic_shop_v2
+   DEV_DATABASE_URL=mysql+mysqlconnector://root:your_password@127.0.0.1/mechanic_shop_v3
    
    # Secret keys
    SECRET_KEY=your-secret-key-here
@@ -255,6 +367,10 @@ POST /service-tickets/1/parts/5
    
    Server starts at `http://127.0.0.1:5000`
 
+8. **Access Swagger Documentation**
+   
+   Navigate to: `http://127.0.0.1:5000/apidocs`
+
 ---
 
 ## ⚙️ Configuration
@@ -263,16 +379,27 @@ The application supports multiple environments through `config.py`:
 
 ### Development
 ```python
-DEBUG = True
-SQLALCHEMY_DATABASE_URI = 'mysql+mysqlconnector://root:password@127.0.0.1/mechanic_shop_v2'
+class DevelopmentConfig(Config):
+    DEBUG = True
+    SQLALCHEMY_DATABASE_URI = 'mysql+mysqlconnector://root:password@127.0.0.1/mechanic_shop_v3'
+    SQLALCHEMY_ECHO = True
+```
+
+### Testing
+```python
+class TestingConfig(Config):
+    TESTING = True
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///:memory:'
+    WTF_CSRF_ENABLED = False
 ```
 
 ### Production
 ```python
-DEBUG = False
-SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL')
-SECRET_KEY = os.environ.get('SECRET_KEY')
-JWT_SECRET_KEY = os.environ.get('JWT_SECRET_KEY')
+class ProductionConfig(Config):
+    DEBUG = False
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL')
+    SECRET_KEY = os.environ.get('SECRET_KEY')
+    JWT_SECRET_KEY = os.environ.get('JWT_SECRET_KEY')
 ```
 
 ### JWT Configuration
@@ -329,6 +456,232 @@ flask db history
 
 ---
 
+## 📚 Swagger Documentation
+
+### Accessing Swagger UI
+
+Navigate to: **http://127.0.0.1:5000/apidocs**
+
+### Features
+
+- **Interactive API Testing** - Try out endpoints directly in browser
+- **Request/Response Schemas** - Complete data format documentation
+- **Authentication Integration** - Test protected routes with JWT tokens
+- **Example Payloads** - Sample data for all requests
+- **Response Examples** - Expected responses for all status codes
+
+### Documentation Structure
+
+Each route is documented with:
+
+1. **Tags** - Organize routes by category (Authentication, Customers, Mechanics, etc.)
+2. **Summary** - Brief one-line description
+3. **Description** - Detailed explanation of functionality
+4. **Parameters** - Request parameters (path, query, body)
+5. **Request Body** - Expected payload format with schema
+6. **Responses** - All possible response codes with examples
+7. **Security** - Authentication requirements
+
+### Example Documentation
+
+```yaml
+/mechanics/{mechanic_id}:
+  get:
+    tags:
+      - Mechanics
+    summary: Get mechanic by ID
+    description: Retrieves detailed information about a specific mechanic including their active status and assigned service tickets
+    security:
+      - Bearer: []
+    parameters:
+      - in: path
+        name: mechanic_id
+        required: true
+        schema:
+          type: integer
+        description: The unique identifier of the mechanic
+    responses:
+      200:
+        description: Mechanic details retrieved successfully
+        content:
+          application/json:
+            schema:
+              $ref: '#/definitions/MechanicResponse'
+            examples:
+              success:
+                value:
+                  mechanic_id: 1
+                  full_name: "John Smith"
+                  email: "john@shop.com"
+                  phone: "555-1234"
+                  salary: 65000
+                  is_active: true
+      404:
+        description: Mechanic not found
+        content:
+          application/json:
+            example:
+              error: "Mechanic not found"
+```
+
+### Schema Definitions
+
+All payload and response schemas are defined:
+
+```yaml
+definitions:
+  MechanicPayload:
+    type: object
+    required:
+      - full_name
+      - email
+      - salary
+    properties:
+      full_name:
+        type: string
+        example: "John Smith"
+      email:
+        type: string
+        format: email
+        example: "john@shop.com"
+      phone:
+        type: string
+        example: "555-1234"
+      salary:
+        type: integer
+        example: 65000
+      is_active:
+        type: boolean
+        default: true
+        example: true
+```
+
+See `SWAGGER_DOCUMENTATION.md` for complete documentation details.
+
+---
+
+## 🧪 Testing
+
+### Test Structure
+
+```
+tests/
+├── __init__.py
+├── test_customer.py          # Customer & authentication tests
+├── test_mechanic.py          # Mechanic route tests
+├── test_service_ticket.py    # Service ticket tests
+└── test_inventory.py         # Inventory management tests
+```
+
+### Running Tests
+
+```bash
+# Run all tests
+python -m unittest discover tests
+
+# Run with verbose output
+python -m unittest discover tests -v
+
+# Run specific test file
+python -m unittest tests.test_mechanic
+
+# Run specific test class
+python -m unittest tests.test_mechanic.TestMechanicRoutes
+
+# Run specific test method
+python -m unittest tests.test_mechanic.TestMechanicRoutes.test_create_mechanic
+```
+
+### Test Coverage by Blueprint
+
+#### Customer Tests (`test_customer.py`)
+- ✅ `test_register_customer` - Register new customer
+- ✅ `test_register_duplicate_email` - Prevent duplicate emails (negative)
+- ✅ `test_login_customer` - Login with valid credentials
+- ✅ `test_login_invalid_credentials` - Invalid login (negative)
+- ✅ `test_get_all_customers` - List customers with pagination
+- ✅ `test_get_customer_by_id` - Get single customer
+- ✅ `test_update_customer` - Update customer information
+- ✅ `test_add_vehicle` - Add vehicle to customer
+- ✅ `test_add_vehicle_invalid_customer` - Invalid customer ID (negative)
+
+#### Mechanic Tests (`test_mechanic.py`)
+- ✅ `test_create_mechanic` - Create new mechanic
+- ✅ `test_create_mechanic_missing_fields` - Missing required fields (negative)
+- ✅ `test_get_all_mechanics` - List all mechanics (cached)
+- ✅ `test_get_mechanic_by_id` - Get single mechanic
+- ✅ `test_get_mechanics_by_activity` - Sort by ticket count
+- ✅ `test_update_mechanic` - Update mechanic information
+- ✅ `test_delete_mechanic` - Delete mechanic
+- ✅ `test_delete_nonexistent_mechanic` - Invalid mechanic ID (negative)
+
+#### Service Ticket Tests (`test_service_ticket.py`)
+- ✅ `test_create_service_ticket` - Create new ticket
+- ✅ `test_create_ticket_invalid_vehicle` - Invalid vehicle ID (negative)
+- ✅ `test_get_all_service_tickets` - List all tickets
+- ✅ `test_get_service_ticket_by_id` - Get single ticket
+- ✅ `test_update_service_ticket` - Update ticket status
+- ✅ `test_assign_mechanic_to_ticket` - Assign mechanic
+- ✅ `test_remove_mechanic_from_ticket` - Remove mechanic
+- ✅ `test_bulk_edit_mechanics` - Add/remove multiple mechanics
+- ✅ `test_assign_invalid_mechanic` - Invalid mechanic assignment (negative)
+
+#### Inventory Tests (`test_inventory.py`)
+- ✅ `test_create_part` - Create inventory part
+- ✅ `test_create_part_duplicate_number` - Duplicate part number (negative)
+- ✅ `test_get_all_parts` - List all parts
+- ✅ `test_get_low_stock_parts` - Filter low stock parts
+- ✅ `test_get_part_by_id` - Get single part
+- ✅ `test_update_part` - Update part information
+- ✅ `test_adjust_part_quantity` - Adjust stock quantity
+- ✅ `test_adjust_insufficient_quantity` - Insufficient stock (negative)
+- ✅ `test_add_part_to_ticket` - Add part to service ticket
+- ✅ `test_delete_part` - Delete part
+
+### Test Example
+
+```python
+def test_create_mechanic(self):
+    """Test creating a new mechanic"""
+    response = self.client.post('/mechanics',
+        json={
+            'full_name': 'Test Mechanic',
+            'email': 'test@shop.com',
+            'phone': '555-5555',
+            'salary': 60000,
+            'is_active': True
+        },
+        headers={'Authorization': f'Bearer {self.token}'}
+    )
+    
+    self.assertEqual(response.status_code, 201)
+    data = response.get_json()
+    self.assertIn('mechanic_id', data)
+    self.assertEqual(data['full_name'], 'Test Mechanic')
+```
+
+### Negative Test Example
+
+```python
+def test_create_mechanic_missing_fields(self):
+    """Test creating mechanic with missing required fields"""
+    response = self.client.post('/mechanics',
+        json={
+            'full_name': 'Test Mechanic'
+            # Missing email and salary
+        },
+        headers={'Authorization': f'Bearer {self.token}'}
+    )
+    
+    self.assertEqual(response.status_code, 400)
+    data = response.get_json()
+    self.assertIn('error', data)
+```
+
+See `TESTING.md` for complete testing documentation.
+
+---
+
 ## 🔌 API Endpoints
 
 ### Authentication Endpoints
@@ -339,49 +692,16 @@ flask db history
 | POST | `/auth/login` | Login and get JWT token | 5/min | No |
 | GET | `/auth/me` | Get current user info | - | Yes |
 
-**Example: Register**
-```bash
-curl -X POST http://127.0.0.1:5000/auth/register \
-  -H "Content-Type: application/json" \
-  -d '{
-    "first_name": "John",
-    "last_name": "Doe",
-    "email": "john@example.com",
-    "phone": "555-1234",
-    "address": "123 Main St",
-    "city": "Denver",
-    "state": "CO",
-    "postal_code": "80201",
-    "password": "securepass123"
-  }'
-```
-
-**Example: Login**
-```bash
-curl -X POST http://127.0.0.1:5000/auth/login \
-  -H "Content-Type: application/json" \
-  -d '{
-    "email": "john@example.com",
-    "password": "securepass123"
-  }'
-```
-
 ### Customer Endpoints
 
 | Method | Endpoint | Description | Pagination | Auth Required |
 |--------|----------|-------------|------------|---------------|
 | GET | `/customers` | List all customers | Yes | Yes |
 | GET | `/customers/<id>` | Get customer details | - | Yes |
-| PUT | `/customers/<id>` | Update customer (own account) | - | Yes |
-| DELETE | `/customers/<id>` | Delete customer (own account) | - | Yes |
+| PUT | `/customers/<id>` | Update customer | - | Yes |
+| DELETE | `/customers/<id>` | Delete customer | - | Yes |
 | POST | `/customers/<id>/vehicles` | Add vehicle | - | Yes |
 | GET | `/customers/<id>/vehicles` | Get customer vehicles | - | Yes |
-
-**Example: Get Customers with Pagination**
-```bash
-curl -X GET "http://127.0.0.1:5000/customers?page=1&per_page=10" \
-  -H "Authorization: Bearer YOUR_JWT_TOKEN"
-```
 
 ### Mechanic Endpoints
 
@@ -393,12 +713,6 @@ curl -X GET "http://127.0.0.1:5000/customers?page=1&per_page=10" \
 | GET | `/mechanics/by-activity` | Sort by ticket count | No | Yes |
 | PUT | `/mechanics/<id>` | Update mechanic | No | Yes |
 | DELETE | `/mechanics/<id>` | Delete mechanic | No | Yes |
-
-**Example: Get Mechanics Sorted by Activity**
-```bash
-curl -X GET "http://127.0.0.1:5000/mechanics/by-activity?order=desc&active_only=true" \
-  -H "Authorization: Bearer YOUR_JWT_TOKEN"
-```
 
 ### Service Ticket Endpoints
 
@@ -414,34 +728,6 @@ curl -X GET "http://127.0.0.1:5000/mechanics/by-activity?order=desc&active_only=
 | POST | `/service-tickets/<id>/parts/<part_id>` | Add part to ticket | Yes |
 | DELETE | `/service-tickets/<id>` | Delete ticket | Yes |
 
-**Example: Create Service Ticket**
-```bash
-curl -X POST http://127.0.0.1:5000/service-tickets \
-  -H "Authorization: Bearer YOUR_JWT_TOKEN" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "vehicle_id": 1,
-    "customer_id": 1,
-    "status": "open",
-    "problem_description": "Engine making strange noise",
-    "odometer_miles": 45000,
-    "priority": 3
-  }'
-```
-
-**Example: Bulk Edit Mechanics**
-```bash
-curl -X PUT http://127.0.0.1:5000/service-tickets/1/edit \
-  -H "Authorization: Bearer YOUR_JWT_TOKEN" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "add_ids": [1, 2],
-    "remove_ids": [3],
-    "role": "Lead Technician",
-    "minutes_worked": 0
-  }'
-```
-
 ### Inventory Endpoints
 
 | Method | Endpoint | Description | Auth Required |
@@ -453,36 +739,6 @@ curl -X PUT http://127.0.0.1:5000/service-tickets/1/edit \
 | PUT | `/inventory/<id>` | Update part | Yes |
 | PATCH | `/inventory/<id>/adjust-quantity` | Adjust quantity | Yes |
 | DELETE | `/inventory/<id>` | Delete part | Yes |
-
-**Example: Create Part**
-```bash
-curl -X POST http://127.0.0.1:5000/inventory \
-  -H "Authorization: Bearer YOUR_JWT_TOKEN" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "part_number": "BRK-001",
-    "name": "Brake Pad Set",
-    "category": "Brakes",
-    "current_cost_cents": 4500,
-    "quantity_in_stock": 25,
-    "reorder_level": 5,
-    "manufacturer": "AutoParts Inc",
-    "supplier": "Parts Warehouse"
-  }'
-```
-
-**Example: Add Part to Ticket**
-```bash
-curl -X POST http://127.0.0.1:5000/service-tickets/1/parts/5 \
-  -H "Authorization: Bearer YOUR_JWT_TOKEN" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "quantity_used": 2,
-    "markup_percentage": 30.0,
-    "warranty_months": 12,
-    "installed_by_mechanic_id": 3
-  }'
-```
 
 ---
 
@@ -639,12 +895,6 @@ GET /customers?page=2&per_page=20
 }
 ```
 
-**Benefits:**
-- Reduces payload size
-- Improves API performance
-- Better user experience
-- Scalable for large datasets
-
 ### 2. Mechanic Sorting by Activity
 
 **Implementation:**
@@ -672,16 +922,6 @@ def get_mechanics_by_activity():
 ```bash
 GET /mechanics/by-activity?order=desc&active_only=true
 ```
-
-**Query Parameters:**
-- `order`: `desc` (most active first) or `asc` (least active first)
-- `active_only`: `true` to filter only active mechanics
-
-**Use Cases:**
-- Performance reviews
-- Workload balancing
-- Identify top performers
-- Resource allocation
 
 ### 3. Bulk Mechanic Assignment
 
@@ -716,23 +956,6 @@ def edit_ticket_mechanics(ticket_id):
     
     db.session.commit()
 ```
-
-**Usage:**
-```bash
-PUT /service-tickets/1/edit
-{
-  "add_ids": [1, 2, 3],
-  "remove_ids": [4, 5],
-  "role": "Lead Technician",
-  "minutes_worked": 0
-}
-```
-
-**Benefits:**
-- Single request for multiple changes
-- Atomic operations
-- Reduced network overhead
-- Better error handling
 
 ---
 
@@ -788,7 +1011,9 @@ POST /inventory
   "category": "Brakes",
   "current_cost_cents": 4500,
   "quantity_in_stock": 25,
-  "reorder_level": 5
+  "reorder_level": 5,
+  "manufacturer": "AutoParts Inc",
+  "supplier": "Parts Warehouse"
 }
 ```
 
@@ -836,130 +1061,14 @@ Two comprehensive Postman collections are included in `/Postman`:
 - **Environment**: `Mechanic_Shop_API.postman_environment.json`
 - **Purpose**: Organized for initial V1 presentation with DELETE operations at the end
 
-#### **V2 Collection** (Continuous Testing) ✨ NEW
-- **File**: `Mechanic_Shop_API_V2.postman_collection.json`
-- **Environment**: `Mechanic_Shop_API_V2.postman_environment.json`
-- **Purpose**: Streamlined for continuous testing after V1 presentation with all V2 features
+#### **V3 Collection** (Continuous Testing)
+- **File**: `Mechanic_Shop_API_V3.postman_collection.json`
+- **Environment**: `Mechanic_Shop_API_V3.postman_environment.json`
+- **Purpose**: Streamlined for continuous testing after V1 presentation with all V3 features
 
-### Import Instructions
+### Complete Test Sequence
 
-1. Open Postman
-2. Click **Import**
-3. Select **both** collection files and **both** environment files from `/Postman` directory
-4. You'll have two collections:
-   - **Mechanic Shop API - Complete Collection** (V1)
-   - **Mechanic Shop API V2 - Complete Testing Suite** (V2)
-
-### V2 Collection Structure (Recommended for Testing)
-
-**📁 1. Authentication**
-- Register Customer 1
-- Login Customer
-- Get Current User
-- 🆕 **V2 Features**: Rate limiting (3/hour register, 5/min login), JWT tokens
-
-**📁 2. Customers (Paginated)**
-- Get All Customers (Page 1) - 🆕 **V2**: Pagination with metadata
-- Get Single Customer
-- Update Customer
-
-**📁 3. Vehicles**
-- Create Vehicle
-- Get Customer Vehicles
-- Update Vehicle
-- Delete Vehicle
-
-**📁 4. Mechanics - FULL CRUD** ✅ **ASSIGNMENT**
-- ✅ CREATE Mechanic 1, 2, 3
-- ✅ GET All Mechanics (CACHED) - 🆕 **V2**: Cached 5 minutes
-- ✅ GET Single Mechanic
-- 🆕 GET Mechanics by Activity - **V2 ADVANCED**: Sort by ticket count
-- ✅ UPDATE Mechanic
-- ✅ DELETE Mechanic
-
-**📁 5. Service Tickets - FULL CRUD** ✅ **ASSIGNMENT**
-- ✅ CREATE Service Ticket 1, 2
-- ✅ GET All Service Tickets
-- ✅ GET Single Ticket
-- ✅ ASSIGN Mechanic to Ticket
-- ✅ ASSIGN Second Mechanic
-- ✅ REMOVE Mechanic from Ticket
-- 🆕 BULK EDIT Mechanics - **V2 ADVANCED**: Add/remove multiple mechanics
-- ✅ UPDATE Service Ticket
-- ✅ DELETE Service Ticket
-
-**📁 6. Inventory - Parts** 🆕 **V2 FEATURE**
-- CREATE Part (Brake Pads)
-- GET All Parts
-- GET Low Stock Parts
-- GET Single Part
-- UPDATE Part
-- ADJUST Part Quantity
-- ADD Part to Ticket
-- DELETE Part
-
-### Environment Variables (V2)
-
-The V2 environment automatically manages:
-- `base_url` - API base URL (http://localhost:5000)
-- `jwt_token` / `jwt_token_2` - JWT authentication tokens (auto-saved)
-- `customer_id` / `customer_id_2` - Customer IDs (auto-saved)
-- `mechanic_id` / `mechanic_id_2` / `mechanic_id_3` - Mechanic IDs (auto-saved)
-- `vehicle_id` / `vehicle_id_2` - Vehicle IDs (auto-saved)
-- `ticket_id` / `ticket_id_2` - Service ticket IDs (auto-saved)
-- `part_id` - Part ID (auto-saved)
-
-### V2 Testing Workflow (Continuous Testing)
-
-1. **Select Environment**: Choose "Mechanic Shop V2 - Local"
-2. **Run Sequentially**: Execute requests in order from top to bottom
-3. **Automatic Saves**: All IDs and tokens are automatically captured
-4. **Continuous Testing**: Collection is designed to be run multiple times
-5. **No Cleanup Needed**: Each run creates new test data
-
-### Complete Test Sequence (V2)
-
-```
-Authentication Flow:
-1. Register Customer 1 → Saves jwt_token & customer_id
-2. Login Customer → Refreshes jwt_token
-3. Get Current User → Verifies authentication
-
-Data Creation:
-4. Get All Customers (Paginated) → Test pagination
-5. Create Vehicle → Saves vehicle_id
-6. Create Mechanic 1 → Saves mechanic_id
-7. Create Mechanic 2 → Saves mechanic_id_2
-8. Create Mechanic 3 → Saves mechanic_id_3
-9. Get All Mechanics (CACHED) → Test caching
-10. Get Mechanics by Activity → Test V2 advanced query
-
-Service Tickets:
-11. Create Service Ticket 1 → Saves ticket_id
-12. Create Service Ticket 2 → Saves ticket_id_2
-13. Get All Service Tickets
-14. Assign Mechanic to Ticket → Test assignment
-15. Assign Second Mechanic → Test multiple assignments
-16. Remove Mechanic from Ticket → Test removal
-17. Bulk Edit Mechanics → Test V2 bulk operations
-18. Update Service Ticket → Test status changes
-
-Inventory Management:
-19. Create Part (Brake Pads) → Saves part_id
-20. Get All Parts
-21. Get Low Stock Parts → Test filtering
-22. Adjust Part Quantity → Test inventory updates
-23. Add Part to Ticket → Test parts integration
-
-Updates & Deletes:
-24. Update Customer, Vehicle, Mechanic, Ticket
-25. Delete operations (Vehicle, Mechanic, Ticket, Part)
-```
-
-### V2 Features to Demonstrate
-
-1. **Rate Limiting**
-   - Try registering more than 3 times
+For detailed Postman testing workflow and instructions, see the full README or Postman collections.
 
 ---
 
@@ -1032,43 +1141,59 @@ Customer 1 ──────< M Vehicle
 ## 📁 Project Structure
 
 ```
-Mechanic-Shop-V2/
+Mechanic-Shop-V3/
 ├── application/                    # Main application package
-│   ├── __init__.py                # Application factory
+│   ├── __init__.py                # Application factory with Swagger config
 │   ├── extensions.py              # Flask extensions (db, jwt, limiter, cache)
-│   ├── models.py                  # SQLAlchemy models (11 models)
+│   ├── models.py                  # SQLAlchemy models (8 models)
 │   └── blueprints/                # Feature modules
 │       ├── auth/                  # Authentication (register, login)
 │       │   ├── __init__.py
 │       │   ├── routes.py
-│       │   └── authSchemas.py
+│       │   ├── authSchemas.py
+│       │   └── swagger_docs.txt   # ✅ V3 NEW
 │       ├── customer/              # Customer & vehicle management
 │       │   ├── __init__.py
 │       │   ├── routes.py
-│       │   └── customerSchemas.py
+│       │   ├── customerSchemas.py
+│       │   └── swagger_docs.txt   # ✅ V3 NEW
 │       ├── mechanic/              # Mechanic management
 │       │   ├── __init__.py
 │       │   ├── routes.py          # Includes caching on GET
-│       │   └── mechanicSchemas.py
+│       │   ├── mechanicSchemas.py
+│       │   └── swagger_docs.txt   # ✅ V3 NEW
 │       ├── service_ticket/        # Service ticket system
 │       │   ├── __init__.py
 │       │   ├── routes.py          # Includes part assignment
-│       │   └── serviceTicketSchemas.py
+│       │   ├── serviceTicketSchemas.py
+│       │   └── swagger_docs.txt   # ✅ V3 NEW
 │       └── inventory/             # Parts inventory management
 │           ├── __init__.py
 │           ├── routes.py          # CRUD + quantity adjustment
-│           └── inventorySchemas.py
+│           ├── inventorySchemas.py
+│           └── swagger_docs.txt   # ✅ V3 NEW
+├── tests/                         # ✅ V3 NEW - unittest test suite
+│   ├── __init__.py
+│   ├── test_customer.py           # Customer route tests
+│   ├── test_mechanic.py           # Mechanic route tests
+│   ├── test_service_ticket.py     # Service ticket tests
+│   └── test_inventory.py          # Inventory tests
 ├── migrations/                    # Database migrations
 │   ├── versions/                  # Migration scripts
 │   └── alembic.ini               # Alembic configuration
-├── Postman/                       # API testing collection
+├── Postman/                       # API testing collections
 │   ├── Mechanic_Shop_API.postman_collection.json
-│   └── Mechanic_Shop_API.postman_environment.json
+│   ├── Mechanic_Shop_API.postman_environment.json
+│   ├── Mechanic_Shop_API_V3.postman_collection.json
+│   └── Mechanic_Shop_API_V3.postman_environment.json
 ├── app.py                         # Application entry point
 ├── config.py                      # Configuration settings
 ├── requirements.txt               # Python dependencies
 ├── .gitignore                     # Git ignore file
-└── README.md                      # This file
+├── README.md                      # This file (comprehensive)
+├── PRESENTATION.md                # Presentation guide for students
+├── SWAGGER_DOCUMENTATION.md       # Complete Swagger docs
+└── TESTING.md                     # Testing documentation
 ```
 
 ### Application Factory Pattern
@@ -1089,50 +1214,21 @@ The project uses the **Application Factory Pattern** for:
 - **Flask-JWT-Extended** - JWT token authentication
 - **Flask-Limiter** - Rate limiting
 - **Flask-Caching** - Response caching
+- **Flask-Swagger** - Swagger documentation generation ✅ **V3**
+- **Flask-Swagger-UI** - Interactive API documentation ✅ **V3**
+- **unittest** - Python testing framework ✅ **V3**
 - **Flask-Marshmallow** - Object serialization/deserialization
 - **MySQL 8.0+** - Relational database
 - **Werkzeug** - Password hashing
 
 ---
 
-## 📝 Assignment Requirements Checklist
+## 📝 Additional Documentation
 
-### ✅ Rate Limiting & Caching
-- [x] Rate limiting applied to registration (3/hour)
-- [x] Rate limiting applied to login (5/minute)
-- [x] Rate limiting applied to other routes
-- [x] Caching implemented on GET /mechanics (5 minutes)
-- [x] Flask-Limiter package integrated
-- [x] Flask-Caching package integrated
-
-### ✅ Token Authentication
-- [x] JWT encode_token function implemented
-- [x] login_schema created (email & password only)
-- [x] POST /auth/login route created
-- [x] Token returned after successful login
-- [x] @jwt_required wrapper on protected routes
-- [x] Token-protected route for customer's tickets
-- [x] python-jose package (via Flask-JWT-Extended)
-
-### ✅ Advanced Queries
-- [x] PUT /service-tickets/<id>/edit for mechanic editing
-- [x] Accepts remove_ids and add_ids parameters
-- [x] GET /mechanics/by-activity sorts by ticket count
-- [x] Pagination applied to GET /customers
-- [x] Page and per_page parameters supported
-
-### ✅ Inventory Management
-- [x] Inventory (Part) model created with required fields
-- [x] Many-to-many relationship: Inventory ↔ ServiceTicket
-- [x] Junction table (TicketPart) with quantity field
-- [x] Inventory blueprint created
-- [x] Inventory CRUD routes implemented
-- [x] POST route to add part to service ticket
-
-### ✅ Testing
-- [x] Postman collection with all endpoints
-- [x] Postman environment for local testing
-- [x] All routes tested and verified
+- **PRESENTATION.md** - Complete student presentation guide (separate file)
+- **SWAGGER_DOCUMENTATION.md** - Detailed Swagger implementation guide
+- **TESTING.md** - Comprehensive testing documentation
+- **Postman/** - API testing collections with examples
 
 ---
 
@@ -1140,8 +1236,8 @@ The project uses the **Application Factory Pattern** for:
 
 ```bash
 # 1. Clone and navigate to project
-git clone https://github.com/growthwithcoding/Mechanic-Shop-V2.git
-cd Mechanic-Shop-V2
+git clone https://github.com/growthwithcoding/Mechanic-Shop-V3.git
+cd Mechanic-Shop-V3
 
 # 2. Create virtual environment
 python -m venv venv
@@ -1153,8 +1249,8 @@ pip install -r requirements.txt
 
 # 4. Create database
 mysql -u root -p
-CREATE DATABASE mechanic_shop_v2;
-exit;
+CREATE DATABASE mechanic_shop_v3;
+EXIT;
 
 # 5. Set environment variables
 set FLASK_APP=app.py  # Windows
@@ -1165,9 +1261,13 @@ flask db upgrade
 
 # 7. Start the server
 python app.py
-```
 
-Server runs at `http://127.0.0.1:5000`
+# 8. Access Swagger Documentation
+# Navigate to: http://127.0.0.1:5000/apidocs
+
+# 9. Run tests
+python -m unittest discover tests
+```
 
 ---
 
@@ -1302,6 +1402,7 @@ This project is licensed under the MIT License.
 - Flask documentation and community
 - SQLAlchemy for excellent ORM capabilities
 - Coding Temple instructors and curriculum
+- Dylan Katina for V3 assignment requirements
 - All contributors and testers
 
 ---
@@ -1315,4 +1416,18 @@ For questions, issues, or suggestions:
 
 ---
 
+## 🎓 For Students
+
+If you're a student working on a similar project:
+
+1. Review **PRESENTATION.md** for presentation guidance
+2. Study the Swagger documentation implementation
+3. Examine the test suite structure and patterns
+4. Use this project as a reference, but write your own code
+5. Understanding the architecture is more important than copying code
+
+---
+
 **Built with ❤️ by Austin Carlson** | *#growthwithcoding*
+
+**Version 3.0** - Documentation & Testing Focus
