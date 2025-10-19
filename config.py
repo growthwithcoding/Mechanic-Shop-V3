@@ -26,6 +26,7 @@ class TestingConfig(Config):
     TESTING = True
     SQLALCHEMY_DATABASE_URI = os.environ.get('TEST_DATABASE_URL') or \
         'mysql+mysqlconnector://root:password@127.0.0.1/mechanic_shop_v3_test'
+    RATELIMIT_ENABLED = False  # Disable rate limiting during tests
 
 
 class ProductionConfig(Config):

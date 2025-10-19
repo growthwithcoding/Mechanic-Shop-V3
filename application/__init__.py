@@ -24,7 +24,11 @@ def create_app(config_name='default'):
     # Initialize extensions with app
     db.init_app(app)
     ma.init_app(app)
+    
+    # Configure rate limiter based on configuration
+    app.config.setdefault('RATELIMIT_ENABLED', True)
     limiter.init_app(app)
+    
     cache.init_app(app)
     jwt.init_app(app)
     migrate.init_app(app, db)
