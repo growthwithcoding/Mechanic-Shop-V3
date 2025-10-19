@@ -39,21 +39,33 @@ def register():
           properties:
             first_name:
               type: string
-              example: John
+              example: Demo
             last_name:
               type: string
-              example: Doe
+              example: User
             email:
               type: string
               format: email
-              example: john.doe@example.com
+              example: demo.user@email.com
             password:
               type: string
               format: password
-              example: SecurePassword123!
+              example: password123
             phone:
               type: string
-              example: 555-123-4567
+              example: 555-9999
+            address:
+              type: string
+              example: 123 Test St
+            city:
+              type: string
+              example: Denver
+            state:
+              type: string
+              example: CO
+            postal_code:
+              type: string
+              example: 80201
     responses:
       201:
         description: Customer registered successfully
@@ -71,19 +83,31 @@ def register():
               properties:
                 customer_id:
                   type: integer
-                  example: 1
+                  example: 6
                 first_name:
                   type: string
-                  example: John
+                  example: Demo
                 last_name:
                   type: string
-                  example: Doe
+                  example: User
                 email:
                   type: string
-                  example: john.doe@example.com
+                  example: demo.user@email.com
                 phone:
                   type: string
-                  example: 555-123-4567
+                  example: 555-9999
+                address:
+                  type: string
+                  example: 123 Test St
+                city:
+                  type: string
+                  example: Denver
+                state:
+                  type: string
+                  example: CO
+                postal_code:
+                  type: string
+                  example: 80201
       400:
         description: Bad request - validation error or email already exists
         schema:
@@ -155,11 +179,11 @@ def login():
             email:
               type: string
               format: email
-              example: john.doe@example.com
+              example: alice.johnson@email.com
             password:
               type: string
               format: password
-              example: SecurePassword123!
+              example: password123
     responses:
       200:
         description: Login successful
@@ -180,16 +204,16 @@ def login():
                   example: 1
                 first_name:
                   type: string
-                  example: John
+                  example: Alice
                 last_name:
                   type: string
-                  example: Doe
+                  example: Johnson
                 email:
                   type: string
-                  example: john.doe@example.com
+                  example: alice.johnson@email.com
                 phone:
                   type: string
-                  example: 555-123-4567
+                  example: 555-1001
       401:
         description: Unauthorized - invalid credentials
         schema:
@@ -254,16 +278,16 @@ def get_current_user():
               example: 1
             first_name:
               type: string
-              example: John
+              example: Alice
             last_name:
               type: string
-              example: Doe
+              example: Johnson
             email:
               type: string
-              example: john.doe@example.com
+              example: alice.johnson@email.com
             phone:
               type: string
-              example: 555-123-4567
+              example: 555-1001
       404:
         description: Customer not found
         schema:

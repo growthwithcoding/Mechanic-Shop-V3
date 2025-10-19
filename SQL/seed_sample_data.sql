@@ -4,15 +4,15 @@
 USE mechanic_shop_v3;
 
 -- Note: All test accounts use password 'password123'
--- Password hash generated with bcrypt: $2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewY5lW7QK5JxvZvq
+-- Password hash generated with werkzeug (scrypt): Compatible with application's password checking
 
 -- Sample Customers
 INSERT INTO customers (first_name, last_name, email, phone, address, city, state, postal_code, password_hash) VALUES
-('Alice', 'Johnson', 'alice.johnson@email.com', '555-1001', '123 Main St', 'Denver', 'CO', '80202', '$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewY5lW7QK5JxvZvq'),
-('Bob', 'Smith', 'bob.smith@email.com', '555-1002', '456 Oak Ave', 'Denver', 'CO', '80203', '$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewY5lW7QK5JxvZvq'),
-('Carol', 'Williams', 'carol.williams@email.com', '555-1003', '789 Pine Rd', 'Aurora', 'CO', '80012', '$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewY5lW7QK5JxvZvq'),
-('David', 'Brown', 'david.brown@email.com', '555-1004', '321 Elm St', 'Lakewood', 'CO', '80226', '$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewY5lW7QK5JxvZvq'),
-('Emma', 'Davis', 'emma.davis@email.com', '555-1005', '654 Maple Dr', 'Littleton', 'CO', '80120', '$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewY5lW7QK5JxvZvq');
+('Alice', 'Johnson', 'alice.johnson@email.com', '555-1001', '123 Main St', 'Denver', 'CO', '80202', 'scrypt:32768:8:1$ojcorXVfGZrGxiuk$26013ff7aa9b95de72d400ca4a38b98b814effd47fbd880459c4ff194ba139ca0e38e5e0f79bb8ba8b2349115e96821eddc48c72e824ce952ca2d5b103e36d7e'),
+('Bob', 'Smith', 'bob.smith@email.com', '555-1002', '456 Oak Ave', 'Denver', 'CO', '80203', 'scrypt:32768:8:1$ojcorXVfGZrGxiuk$26013ff7aa9b95de72d400ca4a38b98b814effd47fbd880459c4ff194ba139ca0e38e5e0f79bb8ba8b2349115e96821eddc48c72e824ce952ca2d5b103e36d7e'),
+('Carol', 'Williams', 'carol.williams@email.com', '555-1003', '789 Pine Rd', 'Aurora', 'CO', '80012', 'scrypt:32768:8:1$ojcorXVfGZrGxiuk$26013ff7aa9b95de72d400ca4a38b98b814effd47fbd880459c4ff194ba139ca0e38e5e0f79bb8ba8b2349115e96821eddc48c72e824ce952ca2d5b103e36d7e'),
+('David', 'Brown', 'david.brown@email.com', '555-1004', '321 Elm St', 'Lakewood', 'CO', '80226', 'scrypt:32768:8:1$ojcorXVfGZrGxiuk$26013ff7aa9b95de72d400ca4a38b98b814effd47fbd880459c4ff194ba139ca0e38e5e0f79bb8ba8b2349115e96821eddc48c72e824ce952ca2d5b103e36d7e'),
+('Emma', 'Davis', 'emma.davis@email.com', '555-1005', '654 Maple Dr', 'Littleton', 'CO', '80120', 'scrypt:32768:8:1$ojcorXVfGZrGxiuk$26013ff7aa9b95de72d400ca4a38b98b814effd47fbd880459c4ff194ba139ca0e38e5e0f79bb8ba8b2349115e96821eddc48c72e824ce952ca2d5b103e36d7e');
 
 -- Sample Vehicles
 INSERT INTO vehicles (customer_id, vin, make, model, year, color) VALUES

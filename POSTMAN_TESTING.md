@@ -65,10 +65,10 @@ You should see:
   "access_token": "eyJhbGc...", 
   "customer": {
     "customer_id": 1,
-    "first_name": "John",
-    "last_name": "Doe",
-    "email": "john.doe@example.com",
-    "phone": "555-1234",
+    "first_name": "Alice",
+    "last_name": "Johnson",
+    "email": "alice.johnson@email.com",
+    "phone": "555-1001",
     "address": "123 Main St",
     "city": "Denver",
     "state": "CO",
@@ -105,9 +105,9 @@ You should see:
   "access_token": "eyJhbGc...",
   "customer": {
     "customer_id": 1,
-    "email": "john.doe@example.com",
-    "first_name": "John",
-    "last_name": "Doe"
+    "email": "alice.johnson@email.com",
+    "first_name": "Alice",
+    "last_name": "Johnson"
   }
 }
 ```
@@ -136,10 +136,10 @@ You should see:
 ```json
 {
   "customer_id": 1,
-  "first_name": "John",
-  "last_name": "Doe",
-  "email": "john.doe@example.com",
-  "phone": "555-1234",
+  "first_name": "Alice",
+  "last_name": "Johnson",
+  "email": "alice.johnson@email.com",
+  "phone": "555-1001",
   "address": "123 Main St",
   "city": "Denver",
   "state": "CO",
@@ -173,9 +173,9 @@ You should see:
   "customers": [
     {
       "customer_id": 1,
-      "first_name": "John",
-      "last_name": "Doe",
-      "email": "john.doe@example.com",
+      "first_name": "Alice",
+      "last_name": "Johnson",
+      "email": "alice.johnson@email.com",
       ...
     }
   ],
@@ -214,9 +214,9 @@ You should see:
 ```json
 {
   "customer_id": 1,
-  "first_name": "John",
-  "last_name": "Doe",
-  "email": "john.doe@example.com",
+  "first_name": "Alice",
+  "last_name": "Johnson",
+  "email": "alice.johnson@email.com",
   ...
 }
 ```
@@ -240,9 +240,9 @@ You should see:
 ```json
 {
   "customer_id": 1,
-  "first_name": "John",
-  "last_name": "Doe",
-  "phone": "555-1234-UPDATED",
+  "first_name": "Alice",
+  "last_name": "Johnson",
+  "phone": "555-1001-UPDATED",
   ...
 }
 ```

@@ -70,16 +70,43 @@ python -m unittest discover tests -v
 
 ## Test Configuration
 
+### ⚠️ Important: Separate Test Database
+
+This project uses **TWO SEPARATE databases**:
+
+1. **`mechanic_shop_v3`** - DEVELOPMENT Database
+   - Used when running the API: `python app.py`
+   - Uses `seed_sample_data.sql` for manual testing
+   - Data persists between runs
+   - **DO NOT use this for unit tests!**
+
+2. **`mechanic_shop_v3_test`** - TEST Database
+   - Used ONLY for unit tests: `python -m unittest`
+   - Tests create/destroy their own temporary data
+   - **Does NOT use seed_sample_data.sql**
+   - Data is wiped after each test
+   - Completely isolated from development data
+
+### Configuration
+
 Tests use the `TestingConfig` configuration from `config.py`:
-- Database: `mechanic_shop_v3_test`
+- Database: `mechanic_shop_v3_test` (separate test database!)
 - Testing mode enabled
-- Separate from development/production databases
+- Rate limiting disabled for faster tests
+- Isolated from development/production databases
 
-**Important:** Ensure the test database exists before running tests:
+**Important:** Create the test database before running tests:
 
-```sql
+```bash
+# Option 1: Use the SQL script
+mysql -u root -p < SQL/create_test_database.sql
+
+# Option 2: Create manually
+mysql -u root -p
 CREATE DATABASE mechanic_shop_v3_test;
 ```
+
+**Note:** You do NOT need to run migrations or seed data for the test database. Unit tests automatically create tables and test data in the `setUp()` method.
 
 ## Test Coverage by Blueprint
 
@@ -180,6 +207,51 @@ CREATE DATABASE mechanic_shop_v3_test;
 - ❌ Insufficient inventory checks
 - ❌ Invalid mechanic/part references
 - ❌ Unauthorized access
+
+## How Unit Tests Work
+
+### Data Isolation
+
+Each test is completely isolated:
+
+1. **Before Each Test** (`setUp()`):
+   - `db.create_all()` creates fresh tables
+   - Test-specific data is created
+   - Example: Register a test user with `test@example.com`
+
+2. **During Test**:
+   - Test performs its operations
+   - Assertions verify expected behavior
+
+3. **After Each Test** (`tearDown()`):
+   - `db.session.remove()` closes the session
+   - `db.drop_all()` destroys all tables
+   - Database is completely clean for next test
+
+4. **Result**: Each test starts with a blank database
+
+### Why Seed Data is NOT Used
+
+Unit tests **do not use `seed_sample_data.sql`** because:
+- Tests need predictable, controlled data
+- Each test creates only the data it needs
+- Tests must be independent and repeatable
+- Seed data would cause conflicts and unpredictable results
+
+### Development vs Test Credentials
+
+**Development Database** (after running seed_sample_data.sql):
+- Email: `alice.johnson@email.com`
+- Password: `password123`
+- Has 5 pre-seeded customers, mechanics, parts, etc.
+
+**Test Database** (during unit tests):
+- Email: `test@example.com` (or similar test-specific emails)
+- Password: `TestPass123!` (or similar test-specific passwords)
+- Data created fresh for each test
+- No relationship to seed data
+
+---
 
 ## Test Patterns
 

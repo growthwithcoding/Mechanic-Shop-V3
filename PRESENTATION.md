@@ -47,70 +47,218 @@ Before presenting, ensure:
 
 ---
 
-### 2. Swagger Documentation Demo (5 minutes)
+### 2. Swagger Documentation Demo (8 minutes)
 
 **Navigate to Swagger UI:**
 ```
 http://127.0.0.1:5000/apidocs
 ```
 
-**Demo Steps:**
+**Complete Swagger Walkthrough for Presentation:**
 
-#### Step 1: Show Documentation Overview
-- Point out organized sections (tags): Authentication, Customers, Mechanics, Service Tickets, Inventory
-- Highlight number of documented endpoints (20+ routes)
-- Show color coding: GET (blue), POST (green), PUT (orange), DELETE (red)
+#### Step 1: Interface Overview (1 minute)
 
-#### Step 2: Demonstrate Interactive Testing
-Choose **POST `/auth/register`**:
-1. Click to expand the endpoint
-2. Point out documentation elements:
-   - **Summary:** "Register new customer account"
-   - **Description:** Full explanation
-   - **Parameters:** Request body schema
-   - **Responses:** 201 (success), 400 (validation error)
-3. Click **"Try it out"**
-4. Fill in example data:
+**Say:** "Let me show you the Swagger documentation interface."
+
+**Point out on screen:**
+1. **API Title**: "Mechanic Shop API V3" at the top
+2. **Organized Sections** (expand to show):
+   - 🔐 Authentication (3 endpoints)
+   - 👥 Customers (6 endpoints)
+   - 🔧 Mechanics (6 endpoints)
+   - 📦 Inventory (7 endpoints)
+   - 🎫 Service Tickets (9 endpoints)
+3. **Color Coding**:
+   - Blue GET = Read data
+   - Green POST = Create
+   - Orange PUT = Update
+   - Red DELETE = Remove
+   - Purple PATCH = Partial update
+4. **Lock Icons** 🔒 = Authentication required
+
+**Say:** "All 20+ routes are organized by category with clear color coding. Let's test them live!"
+
+---
+
+#### Step 2: Register New User (2 minutes)
+
+**Say:** "First, let's register a new user account."
+
+**Action Steps:**
+1. **Scroll to "Authentication" section**
+2. **Click `POST /auth/register`** to expand
+3. **Point out**:
+   - Summary: "Register a new customer"
+   - Parameters showing request body schema
+   - Example values already filled in
+   - Response codes: 201 (success), 400 (error)
+
+4. **Click "Try it out" button**
+
+5. **Say:** "The request body becomes editable. Let me use test data:"
    ```json
    {
      "first_name": "Demo",
-     "last_name": "Student",
-     "email": "demo@example.com",
-     "phone": "555-1234",
-     "password": "secure123",
-     "address": "123 Main St",
-     "city": "Denver",
-     "state": "CO",
-     "postal_code": "80201"
+     "last_name": "Presentation",
+     "email": "demo.presentation@email.com",
+     "password": "password123",
+     "phone": "555-9999"
    }
    ```
-5. Click **"Execute"**
-6. Show response:
-   - Status code: 201
-   - Response body with customer data
-   - JWT token returned
 
-#### Step 3: Show Protected Route Documentation
-Choose **GET `/mechanics`** (cached):
-1. Expand endpoint
-2. Point out **security** requirement: "Bearer Token"
-3. Show **lock icon** indicating authentication required
-4. Highlight **caching** note in description (5 minutes)
-5. Show response schema with examples
+6. **Click "Execute" button**
 
-#### Step 4: Show Complex Route
-Choose **PUT `/service-tickets/{ticket_id}/edit`** (bulk edit):
-1. Show path parameter: `ticket_id`
-2. Show request body with `add_ids` and `remove_ids` arrays
-3. Highlight response examples
-4. Explain this is a V2 advanced feature
+7. **Show Response**:
+   - **Status**: `201 Created` ✅
+   - **Response body**:
+     ```json
+     {
+       "message": "Customer registered successfully",
+       "access_token": "eyJhbGc...",
+       "customer": {
+         "customer_id": 6,
+         "first_name": "Demo",
+         "last_name": "Presentation",
+         "email": "demo.presentation@email.com"
+       }
+     }
+     ```
+
+8. **Say:** "Notice we got back a JWT token. I need to copy this for authentication."
+
+9. **Copy the access_token** (show selecting and copying)
+
+---
+
+#### Step 3: Authorize Swagger UI (2 minutes)
+
+**Say:** "Now I need to authenticate Swagger to test protected endpoints."
+
+⚠️ **CRITICAL STEP - Emphasize This!**
+
+**Action Steps:**
+1. **Point to top of page**: "See the green 'Authorize' button with lock icon?"
+
+2. **Click "Authorize" button**
+
+3. **Say:** "A popup appears. This is where I paste my JWT token."
+
+4. **In the "Value" field, type**:
+   ```
+   Bearer eyJhbGc...
+   ```
+   
+   **⚠️ EMPHASIZE**: "Notice I type 'Bearer' with a capital B, add a SPACE, then paste the token."
+
+5. **Click "Authorize" button** in popup
+
+6. **Click "Close" button**
+
+7. **Say:** "Now the lock icons show as closed, meaning I'm authenticated!"
+
+---
+
+#### Step 4: Test Protected Endpoint (1 minute)
+
+**Say:** "Let's verify authentication works by testing a protected endpoint."
+
+**Action Steps:**
+1. **Scroll to "Authentication" section**
+2. **Click `GET /auth/me`**
+3. **Point out**: Lock icon indicates authentication required
+4. **Click "Try it out"**
+5. **Click "Execute"**
+
+6. **Show Response**:
+   - **Status**: `200 OK` ✅
+   - **Body**:
+     ```json
+     {
+       "customer_id": 6,
+       "first_name": "Demo",
+       "last_name": "Presentation",
+       "email": "demo.presentation@email.com"
+     }
+     ```
+
+7. **Say:** "Perfect! Authentication is working. Now I can test any protected endpoint."
+
+---
+
+#### Step 5: Test GET with Seed Data (1 minute)
+
+**Say:** "Let me show you testing with pre-seeded database data."
+
+**Action Steps:**
+1. **Scroll to "Mechanics" section**
+2. **Click `GET /mechanics`**
+3. **Point out**: "This endpoint is cached for 5 minutes"
+4. **Click "Try it out"**
+5. **Click "Execute"**
+
+6. **Show Response** (Status: `200 OK`):
+   ```json
+   [
+     {
+       "mechanic_id": 1,
+       "full_name": "John Smith",
+       "email": "john.smith@mechanicshop.com",
+       "phone": "555-0101",
+       "salary": 65000,
+       "is_active": true
+     },
+     {
+       "mechanic_id": 2,
+       "full_name": "Sarah Johnson",
+       "salary": 68000
+     }
+   ]
+   ```
+
+7. **Say:** "These are from our seed data - 5 mechanics pre-loaded in the database."
+
+---
+
+#### Step 6: Test POST Endpoint (1 minute)
+
+**Say:** "Now let's create a new resource."
+
+**Action Steps:**
+1. **Click `POST /mechanics`**
+2. **Click "Try it out"**
+3. **Edit request body**:
+   ```json
+   {
+     "full_name": "Demo Mechanic",
+     "email": "demo.mechanic@shop.com",
+     "phone": "555-0000",
+     "salary": 60000,
+     "is_active": true
+   }
+   ```
+
+4. **Click "Execute"**
+
+5. **Show Response** (Status: `201 Created`):
+   ```json
+   {
+     "mechanic_id": 6,
+     "full_name": "Demo Mechanic",
+     "email": "demo.mechanic@shop.com",
+     "salary": 60000
+   }
+   ```
+
+6. **Say:** "Notice it assigned mechanic_id 6. I could now use this ID to test other endpoints like update or delete."
+
+---
 
 **Key Points to Emphasize:**
-- ✅ Every route has complete documentation
-- ✅ All request/response schemas defined
-- ✅ Interactive testing built-in
-- ✅ Security requirements clearly marked
-- ✅ Examples provided for all schemas
+- ✅ Interactive testing without Postman
+- ✅ Authentication integration working
+- ✅ All request/response schemas documented
+- ✅ Real-time validation and error messages
+- ✅ Examples for all endpoints
 
 ---
 

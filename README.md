@@ -470,6 +470,595 @@ Navigate to: **http://127.0.0.1:5000/apidocs**
 - **Example Payloads** - Sample data for all requests
 - **Response Examples** - Expected responses for all status codes
 
+---
+
+## 🚀 Complete Swagger UI Walkthrough
+
+This section provides a step-by-step guide to using the Swagger API documentation.
+
+### Prerequisites
+
+1. **Start the API server**:
+   ```bash
+   python app.py
+   ```
+
+2. **Ensure database has seed data**:
+   ```bash
+   # Using MySQL Workbench: Open and execute SQL\seed_sample_data.sql
+   # OR if MySQL is in PATH:
+   mysql -u root -p mechanic_shop_v3 < SQL/seed_sample_data.sql
+   ```
+
+3. **Open Swagger UI in browser**:
+   ```
+   http://127.0.0.1:5000/apidocs
+   ```
+
+### Step-by-Step Walkthrough
+
+#### Step 1: Understanding the Interface
+
+When you open Swagger UI, you'll see:
+
+1. **API Title & Version**: "Mechanic Shop API V3" at the top
+2. **Organized Sections** (Tags):
+   - 🔐 **Authentication** - Register, Login, Get Current User
+   - 👥 **Customers** - Customer management (with pagination)
+   - 🔧 **Mechanics** - Mechanic management (with caching)
+   - 📦 **Inventory** - Parts inventory system
+   - 🎫 **Service Tickets** - Work order management
+
+3. **Color Coding**:
+   - 🟦 **Blue (GET)** - Retrieve data
+   - 🟩 **Green (POST)** - Create new resource
+   - 🟨 **Orange (PUT)** - Update existing resource
+   - 🟥 **Red (DELETE)** - Delete resource
+   - 🟪 **Purple (PATCH)** - Partial update
+
+4. **Lock Icons** 🔒 - Indicate authentication required
+
+---
+
+#### Step 2: Register a New User (Public Endpoint)
+
+**Goal**: Create a customer account
+
+1. **Scroll to "Authentication" section**
+
+2. **Click on `POST /auth/register`** to expand it
+
+3. **You'll see**:
+   - Summary: "Register a new customer"
+   - Description: Full explanation
+   - Request body schema with example
+
+4. **Click "Try it out" button** (top right of the endpoint)
+
+5. **The request body becomes editable**. Use this example:
+   ```json
+   {
+     "first_name": "Test",
+     "last_name": "User",
+     "email": "test.user@email.com",
+     "password": "password123",
+     "phone": "555-9999"
+   }
+   ```
+
+6. **Click "Execute" button**
+
+7. **View the response**:
+   - **Status**: `201 Created` (success!)
+   - **Response Body**:
+     ```json
+     {
+       "message": "Customer registered successfully",
+       "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+       "customer": {
+         "customer_id": 6,
+         "first_name": "Test",
+         "last_name": "User",
+         "email": "test.user@email.com",
+         "phone": "555-9999"
+       }
+     }
+     ```
+   - **Copy the `access_token` value** - you'll need it next!
+
+---
+
+#### Step 3: Authenticate Swagger UI (CRITICAL!)
+
+**Goal**: Set up authentication so you can test protected endpoints
+
+⚠️ **Common Mistake**: Entering just the token without "Bearer " prefix
+
+**Correct Steps**:
+
+1. **Copy the access_token** from the register response (long string starting with `eyJ...`)
+
+2. **Click the "Authorize" button** at the top-right of the page
+   - Look for the 🔓 **green "Authorize"** button
+   - Or the 🔒 lock icon
+
+3. **A popup window appears** titled "Available authorizations"
+
+4. **In the "Value" field**, enter:
+   ```
+   Bearer YOUR_TOKEN_HERE
+   ```
+   
+   **IMPORTANT**: 
+   - Type the word **"Bearer"** (capital B)
+   - Add a **space**
+   - Then paste your token
+   
+   **Example**:
+   ```
+   Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTcyOTM1MTk2MiwianRpIjoiMTRiZjE3NzUtYmI0MC00YzE2LWE4YzItMzE3YTM2ZjAzYmQ2IiwidHlwZSI6ImFjY2VzcyIsInN1YiI6IjEiLCJuYmYiOjE3MjkzNTE5NjIsImNzcmYiOiIyMWU4ZGRlNC0wNzIwLTRlYTAtOTg1OC0xYWI4NzNlMjdjZjEifQ.1mwx8A5CtXId2APcp7mm27c-EA2UzeXXe0cuScOixqk
+   ```
+
+5. **Click "Authorize" button** in the popup
+
+6. **Click "Close" button**
+
+7. **Verification**: The lock icon 🔒 should now appear **closed/filled** on protected endpoints
+
+---
+
+#### Step 4: Test an Authenticated Endpoint
+
+**Goal**: Verify authentication is working
+
+1. **Scroll to "Authentication" section**
+
+2. **Click on `GET /auth/me`** (Get current authenticated user information)
+   - Notice the 🔒 **lock icon** indicating authentication required
+
+3. **Click "Try it out"**
+
+4. **Click "Execute"**
+
+5. **View the response**:
+   - **Status**: `200 OK` (success!)
+   - **Response Body**:
+     ```json
+     {
+       "customer_id": 6,
+       "first_name": "Test",
+       "last_name": "User",
+       "email": "test.user@email.com",
+       "phone": "555-9999"
+     }
+     ```
+
+**If you get 401 Unauthorized**:
+- You forgot to click "Authorize" OR
+- You forgot to include "Bearer " before the token OR
+- Your token expired (tokens last 1 hour)
+- Solution: Go back to Step 3 and re-authorize
+
+---
+
+#### Step 5: Login with Seed Data
+
+**Goal**: Login with pre-seeded customer account
+
+1. **Scroll to "Authentication" section**
+
+2. **Click on `POST /auth/login`**
+
+3. **Click "Try it out"**
+
+4. **Enter seed data credentials**:
+   ```json
+   {
+     "email": "alice.johnson@email.com",
+     "password": "password123"
+   }
+   ```
+   
+   **Note**: All seeded customers use password `password123`
+
+5. **Click "Execute"**
+
+6. **Response** (Status: `200 OK`):
+   ```json
+   {
+     "message": "Login successful",
+     "access_token": "eyJhbGc...",
+     "customer": {
+       "customer_id": 1,
+       "first_name": "Alice",
+       "last_name": "Johnson",
+       "email": "alice.johnson@email.com",
+       "phone": "555-1001"
+     }
+   }
+   ```
+
+7. **Copy the new access_token** and re-authorize (Step 3) if you want to act as Alice
+
+---
+
+#### Step 6: Test GET Endpoints (List Data)
+
+**Goal**: Retrieve lists of resources
+
+**Example: Get All Mechanics** (Cached endpoint)
+
+1. **Scroll to "Mechanics" section**
+
+2. **Click on `GET /mechanics`**
+   - Notice: 🔒 Authentication required
+   - Note in description: "cached for 5 minutes"
+
+3. **Click "Try it out"**
+
+4. **Click "Execute"**
+
+5. **Response** (Status: `200 OK`):
+   ```json
+   [
+     {
+       "mechanic_id": 1,
+       "full_name": "John Smith",
+       "email": "john.smith@mechanicshop.com",
+       "phone": "555-0101",
+       "salary": 65000,
+       "is_active": true
+     },
+     {
+       "mechanic_id": 2,
+       "full_name": "Sarah Johnson",
+       "email": "sarah.johnson@mechanicshop.com",
+       "phone": "555-0102",
+       "salary": 68000,
+       "is_active": true
+     }
+   ]
+   ```
+
+6. **Try again immediately** - Should be faster (served from cache!)
+
+---
+
+#### Step 7: Test GET with Path Parameters
+
+**Goal**: Retrieve a specific resource by ID
+
+**Example: Get Single Mechanic**
+
+1. **Click on `GET /mechanics/{mechanic_id}`**
+
+2. **Click "Try it out"**
+
+3. **Path Parameter field appears**:
+   - **mechanic_id**: Enter `1`
+
+4. **Click "Execute"**
+
+5. **Response** (Status: `200 OK`):
+   ```json
+   {
+     "mechanic_id": 1,
+     "full_name": "John Smith",
+     "email": "john.smith@mechanicshop.com",
+     "phone": "555-0101",
+     "salary": 65000,
+     "is_active": true,
+     "ticket_count": 3
+   }
+   ```
+
+---
+
+#### Step 8: Test POST Endpoints (Create Resources)
+
+**Goal**: Create a new resource
+
+**Example: Create a New Mechanic**
+
+1. **Scroll to "Mechanics" section**
+
+2. **Click on `POST /mechanics`**
+
+3. **Click "Try it out"**
+
+4. **Edit the request body**:
+   ```json
+   {
+     "full_name": "Robert Wilson",
+     "email": "robert.wilson@mechanicshop.com",
+     "phone": "555-0106",
+     "salary": 62000,
+     "is_active": true
+   }
+   ```
+
+5. **Click "Execute"**
+
+6. **Response** (Status: `201 Created`):
+   ```json
+   {
+     "mechanic_id": 6,
+     "full_name": "Robert Wilson",
+     "email": "robert.wilson@mechanicshop.com",
+     "phone": "555-0106",
+     "salary": 62000,
+     "is_active": true
+   }
+   ```
+
+**Note the new `mechanic_id` for use in other operations!**
+
+---
+
+#### Step 9: Test PUT Endpoints (Update Resources)
+
+**Goal**: Update an existing resource
+
+**Example: Update Mechanic**
+
+1. **Click on `PUT /mechanics/{mechanic_id}`**
+
+2. **Click "Try it out"**
+
+3. **Set path parameter**:
+   - **mechanic_id**: Enter `6` (the one we just created)
+
+4. **Edit request body** (change salary):
+   ```json
+   {
+     "full_name": "Robert Wilson",
+     "email": "robert.wilson@mechanicshop.com",
+     "phone": "555-0106",
+     "salary": 65000,
+     "is_active": true
+   }
+   ```
+
+5. **Click "Execute"**
+
+6. **Response** (Status: `200 OK`):
+   ```json
+   {
+     "mechanic_id": 6,
+     "full_name": "Robert Wilson",
+     "salary": 65000
+   }
+   ```
+
+---
+
+#### Step 10: Test Advanced Endpoints
+
+**Goal**: Use complex query parameters and operations
+
+**Example: Get Mechanics Sorted by Activity**
+
+1. **Click on `GET /mechanics/by-activity`**
+
+2. **Click "Try it out"**
+
+3. **Query Parameters appear**:
+   - **order**: Select `desc` (most active first)
+   - **active_only**: Select `true` (filter out inactive)
+
+4. **Click "Execute"**
+
+5. **Response** (Status: `200 OK`):
+   ```json
+   [
+     {
+       "mechanic_id": 1,
+       "full_name": "John Smith",
+       "email": "john.smith@mechanicshop.com",
+       "ticket_count": 3,
+       "is_active": true
+     },
+     {
+       "mechanic_id": 2,
+       "full_name": "Sarah Johnson",
+       "ticket_count": 2,
+       "is_active": true
+     }
+   ]
+   ```
+
+**Sorted by `ticket_count` in descending order!**
+
+---
+
+#### Step 11: Test Complex Relationships
+
+**Goal**: Work with related resources
+
+**Example: Add Part to Service Ticket**
+
+1. **Scroll to "Service Tickets" section**
+
+2. **Click on `POST /service-tickets/{ticket_id}/parts/{part_id}`**
+
+3. **Click "Try it out"**
+
+4. **Set path parameters**:
+   - **ticket_id**: Enter `1`
+   - **part_id**: Enter `1`
+
+5. **Edit request body**:
+   ```json
+   {
+     "quantity_used": 2,
+     "markup_percentage": 30.0,
+     "warranty_months": 12,
+     "installed_by_mechanic_id": 1
+   }
+   ```
+
+6. **Click "Execute"**
+
+7. **Response** (Status: `200 OK`):
+   ```json
+   {
+     "message": "Part successfully added to ticket",
+     "ticket_id": 1,
+     "part_id": 1,
+     "part_name": "Engine Oil 5W-30",
+     "quantity_used": 2,
+     "unit_cost_cents": 2500,
+     "total_cost": 65.00,
+     "remaining_stock": 48
+   }
+   ```
+
+**Notice**: Inventory automatically decremented from 50 to 48!
+
+---
+
+#### Step 12: Test Error Handling
+
+**Goal**: See how the API handles errors
+
+**Example: Try to Get Non-Existent Mechanic**
+
+1. **Click on `GET /mechanics/{mechanic_id}`**
+
+2. **Click "Try it out"**
+
+3. **Enter invalid ID**:
+   - **mechanic_id**: Enter `999`
+
+4. **Click "Execute"**
+
+5. **Response** (Status: `404 Not Found`):
+   ```json
+   {
+     "error": "Mechanic not found."
+   }
+   ```
+
+**Example: Try to Create Mechanic with Missing Fields**
+
+1. **Click on `POST /mechanics`**
+
+2. **Click "Try it out"**
+
+3. **Use incomplete data**:
+   ```json
+   {
+     "full_name": "Test Person"
+   }
+   ```
+
+4. **Click "Execute"**
+
+5. **Response** (Status: `400 Bad Request`):
+   ```json
+   {
+     "email": ["Missing data for required field."],
+     "salary": ["Missing data for required field."]
+   }
+   ```
+
+---
+
+### Quick Reference: Seed Data Credentials
+
+**Customer Accounts** (password: `password123` for all):
+- alice.johnson@email.com - Customer ID: 1
+- bob.smith@email.com - Customer ID: 2
+- carol.williams@email.com - Customer ID: 3
+- david.brown@email.com - Customer ID: 4
+- emma.davis@email.com - Customer ID: 5
+
+**Pre-seeded Data**:
+- 5 Customers with 6 Vehicles
+- 5 Mechanics
+- 10 Services
+- 12 Inventory Parts
+- 6 Service Tickets with mechanics and parts assigned
+
+---
+
+### Common Issues & Solutions
+
+#### Issue: 401 Unauthorized
+**Symptoms**: Protected endpoints return 401
+**Solution**:
+1. Click "Authorize" button at top of page
+2. Enter: `Bearer YOUR_TOKEN` (with space after Bearer)
+3. Click "Authorize" then "Close"
+
+#### Issue: Token Expired
+**Symptoms**: Was working, now getting 401
+**Solution**:
+- Tokens expire after 1 hour
+- Login again to get a new token
+- Re-authorize with new token
+
+#### Issue: 400 Bad Request
+**Symptoms**: Validation errors on POST/PUT
+**Solution**:
+- Check all required fields are included
+- Verify data types match schema (e.g., salary should be integer)
+- Check email format is valid
+- Review the error message for specific field issues
+
+#### Issue: 404 Not Found
+**Symptoms**: Resource not found errors
+**Solution**:
+- Verify the ID exists (try listing all resources first)
+- Check you're using the correct ID from previous operations
+- Ensure seed data was loaded
+
+---
+
+### Testing Workflow Example
+
+Complete workflow testing all major operations:
+
+1. **Register** → Get token
+2. **Authorize Swagger** → Bearer {token}
+3. **Get /auth/me** → Verify authentication
+4. **GET /mechanics** → See all mechanics
+5. **POST /mechanics** → Create new mechanic
+6. **GET /mechanics/{id}** → View the new mechanic
+7. **PUT /mechanics/{id}** → Update mechanic info
+8. **GET /mechanics/by-activity** → See sorted by activity
+9. **GET /service-tickets** → View tickets
+10. **POST /service-tickets** → Create new ticket
+11. **PUT /service-tickets/{id}/assign-mechanic/{mechanic_id}** → Assign mechanic
+12. **POST /service-tickets/{id}/parts/{part_id}** → Add part to ticket
+13. **GET /inventory?low_stock=true** → Check low stock items
+
+---
+
+### Swagger UI Tips
+
+**Keyboard Shortcuts**:
+- `Ctrl/Cmd + K` - Focus search
+- Click endpoint → Automatically scrolls to it
+- `Esc` - Collapse expanded endpoint
+
+**Best Practices**:
+- Always authorize before testing protected endpoints
+- Copy response IDs to use in related operations
+- Check response status codes to understand results
+- Read error messages carefully for troubleshooting
+- Use "Try it out" to test immediately without Postman
+
+**Time Savers**:
+- Use the search box to find specific endpoints
+- Bookmark frequently used endpoints
+- Keep a text file with test data for quick copy/paste
+- Use browser dev tools (F12) to see actual HTTP requests
+
+---
+
+This completes the comprehensive Swagger UI walkthrough! You now know how to test every type of endpoint in the Mechanic Shop API.
+
 ### Documentation Structure
 
 Each route is documented with:

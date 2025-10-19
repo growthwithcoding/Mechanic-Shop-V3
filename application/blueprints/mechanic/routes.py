@@ -39,21 +39,21 @@ def create_mechanic():
           properties:
             first_name:
               type: string
-              example: Mike
+              example: Robert
             last_name:
               type: string
-              example: Mechanic
+              example: Wilson
             email:
               type: string
               format: email
-              example: mike@mechanicshop.com
+              example: robert.wilson@mechanicshop.com
             phone:
               type: string
-              example: 555-111-2222
+              example: 555-0106
             salary:
               type: number
               format: float
-              example: 50000.00
+              example: 62000.00
             is_active:
               type: boolean
               example: true
@@ -65,22 +65,22 @@ def create_mechanic():
           properties:
             mechanic_id:
               type: integer
-              example: 1
+              example: 6
             first_name:
               type: string
-              example: Mike
+              example: Robert
             last_name:
               type: string
-              example: Mechanic
+              example: Wilson
             email:
               type: string
-              example: mike@mechanicshop.com
+              example: robert.wilson@mechanicshop.com
             phone:
               type: string
-              example: 555-111-2222
+              example: 555-0106
             salary:
               type: number
-              example: 50000.00
+              example: 62000.00
             is_active:
               type: boolean
               example: true
@@ -137,19 +137,19 @@ def get_mechanics():
                 example: 1
               first_name:
                 type: string
-                example: Mike
+                example: John
               last_name:
                 type: string
-                example: Mechanic
+                example: Smith
               email:
                 type: string
-                example: mike@mechanicshop.com
+                example: john.smith@mechanicshop.com
               phone:
                 type: string
-                example: 555-111-2222
+                example: 555-0101
               salary:
                 type: number
-                example: 50000.00
+                example: 65000.00
               is_active:
                 type: boolean
                 example: true
@@ -209,16 +209,16 @@ def get_mechanics_by_activity():
                 example: 1
               full_name:
                 type: string
-                example: Mike Mechanic
+                example: John Smith
               email:
                 type: string
-                example: mike@mechanicshop.com
+                example: john.smith@mechanicshop.com
               phone:
                 type: string
-                example: 555-111-2222
+                example: 555-0101
               salary:
                 type: number
-                example: 50000.00
+                example: 65000.00
               is_active:
                 type: boolean
                 example: true
@@ -313,19 +313,19 @@ def get_mechanic(mechanic_id):
               example: 1
             first_name:
               type: string
-              example: Mike
+              example: John
             last_name:
               type: string
-              example: Mechanic
+              example: Smith
             email:
               type: string
-              example: mike@mechanicshop.com
+              example: john.smith@mechanicshop.com
             phone:
               type: string
-              example: 555-111-2222
+              example: 555-0101
             salary:
               type: number
-              example: 50000.00
+              example: 65000.00
             is_active:
               type: boolean
               example: true
@@ -381,19 +381,19 @@ def update_mechanic(mechanic_id):
           properties:
             first_name:
               type: string
-              example: Michael
+              example: Robert
             last_name:
               type: string
-              example: Mechanic
+              example: Wilson
             email:
               type: string
-              example: mike@mechanicshop.com
+              example: robert.wilson@mechanicshop.com
             phone:
               type: string
-              example: 555-111-2222
+              example: 555-0107
             salary:
               type: number
-              example: 55000.00
+              example: 65000.00
             is_active:
               type: boolean
               example: true
@@ -408,13 +408,13 @@ def update_mechanic(mechanic_id):
               example: 1
             first_name:
               type: string
-              example: Michael
+              example: John
             email:
               type: string
-              example: mike@mechanicshop.com
+              example: john.smith@mechanicshop.com
             salary:
               type: number
-              example: 55000.00
+              example: 70000.00
       404:
         description: Mechanic not found
       400:

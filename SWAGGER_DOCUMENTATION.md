@@ -9,7 +9,13 @@ This document provides information about the Swagger/OpenAPI documentation integ
 Once the application is running, you can access the interactive Swagger UI at:
 
 ```
-http://localhost:5000/api/docs
+http://localhost:5000/apidocs
+```
+
+Or:
+
+```
+http://127.0.0.1:5000/apidocs
 ```
 
 This provides an interactive interface where you can:
@@ -170,11 +176,11 @@ This indicates that the route requires a JWT token in the Authorization header.
 **Request:**
 ```json
 {
-  "first_name": "John",
-  "last_name": "Doe",
-  "email": "john.doe@example.com",
-  "password": "SecurePassword123!",
-  "phone": "555-123-4567"
+  "first_name": "Alice",
+  "last_name": "Johnson",
+  "email": "alice.johnson@email.com",
+  "password": "password123",
+  "phone": "555-1001"
 }
 ```
 
@@ -185,10 +191,10 @@ This indicates that the route requires a JWT token in the Authorization header.
   "access_token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...",
   "customer": {
     "customer_id": 1,
-    "first_name": "John",
-    "last_name": "Doe",
-    "email": "john.doe@example.com",
-    "phone": "555-123-4567"
+    "first_name": "Alice",
+    "last_name": "Johnson",
+    "email": "alice.johnson@email.com",
+    "phone": "555-1001"
   }
 }
 ```

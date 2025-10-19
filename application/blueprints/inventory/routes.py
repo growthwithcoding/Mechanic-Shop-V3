@@ -1,4 +1,4 @@
-from typing import Any, Dict, cast
+from typing import Any, Dict
 from flask import request, jsonify
 from marshmallow import ValidationError
 from sqlalchemy import select
@@ -40,25 +40,25 @@ def create_part():
           properties:
             part_number:
               type: string
-              example: BRK-001
+              example: OIL-Filter-002
             name:
               type: string
-              example: Brake Pad Set
+              example: Premium Oil Filter
             description:
               type: string
-              example: Front brake pads for most vehicles
+              example: High-performance oil filter for most vehicles
             category:
               type: string
-              example: Brakes
+              example: Engine
             current_cost_cents:
               type: integer
-              example: 4500
+              example: 1200
             quantity_in_stock:
               type: integer
-              example: 25
+              example: 50
             reorder_threshold:
               type: integer
-              example: 5
+              example: 10
     responses:
       201:
         description: Part created successfully
@@ -86,17 +86,17 @@ def create_part():
         return jsonify({"error": "No JSON data provided"}), 400
     
     try:
-        part_data = cast(Dict[str, Any], part_schema.load(request.json))
+        part_data = part_schema.load(request.json)
     except ValidationError as e:
         return jsonify(e.messages), 400
     
     # Check if part_number already exists
-    query = select(Part).where(Part.part_number == part_data.part_number)
+    query = select(Part).where(Part.part_number == part_data.part_number)  # type: ignore
     existing_part = db.session.execute(query).scalars().first()
     if existing_part:
         return jsonify({"error": "Part number already exists"}), 400
     
-    new_part = part_data
+    new_part = part_data  # type: ignore
     db.session.add(new_part)
     db.session.commit()
     return jsonify(part_schema.dump(new_part)), 201
@@ -253,18 +253,25 @@ def update_part(part_id):
           properties:
             part_number:
               type: string
+              example: OIL-Filter-002
             name:
               type: string
+              example: Premium Oil Filter - Updated
             description:
               type: string
+              example: High-performance oil filter for most vehicles - Updated description
             category:
               type: string
+              example: Engine
             current_cost_cents:
               type: integer
+              example: 1300
             quantity_in_stock:
               type: integer
+              example: 45
             reorder_threshold:
               type: integer
+              example: 8
     responses:
       200:
         description: Part updated successfully
@@ -284,20 +291,21 @@ def update_part(part_id):
         return jsonify({"error": "No JSON data provided"}), 400
     
     try:
-        part_data = cast(Dict[str, Any], part_schema.load(request.json))
+        part_data = part_schema.load(request.json)
     except ValidationError as e:
         return jsonify(e.messages), 400
     
     # If part_number is being changed, check if new part_number already exists
-    if hasattr(part_data, 'part_number') and part_data.part_number != part.part_number:
-        query = select(Part).where(Part.part_number == part_data.part_number)
+    if hasattr(part_data, 'part_number') and part_data.part_number != part.part_number:  # type: ignore
+        query = select(Part).where(Part.part_number == part_data.part_number)  # type: ignore
         existing_part = db.session.execute(query).scalars().first()
         if existing_part:
             return jsonify({"error": "Part number already exists"}), 400
     
-    # Update part attributes
-    for key, value in part_schema.dump(part_data).items():
-        if hasattr(part, key) and key != 'part_id':
+    # Update part attributes (exclude computed fields like needs_reorder)
+    part_dict: Dict[str, Any] = part_schema.dump(part_data)  # type: ignore
+    for key, value in part_dict.items():
+        if hasattr(part, key) and key not in ['part_id', 'needs_reorder']:
             setattr(part, key, value)
     
     db.session.commit()
