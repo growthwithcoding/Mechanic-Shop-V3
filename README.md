@@ -92,7 +92,43 @@ Utilizing Flask-Swagger and Flask-Swagger-UI to document each route:
 
 ## ✨ Advanced Features Highlights
 
-### 1. Swagger Documentation ✅ **V3 NEW**
+### 1. Enhanced Error Handling ✅ **V3 NEW**
+
+Comprehensive error handling system with detailed logging and tracking:
+
+**Features:**
+- **Unique Error IDs**: Every error includes a UUID for tracking (e.g., `7f9c8d4e-3b2a-4c1d-9e8f-6a5b4c3d2e1f`)
+- **Request Context Logging**: Captures method, endpoint, user ID, IP, query params, and sanitized request data
+- **Environment-Aware Responses**:
+  - Development mode: Shows detailed errors, stack traces, and database constraint details
+  - Production mode: Returns safe messages while logging full details server-side
+- **Sensitive Data Redaction**: Automatically redacts password, token, secret, and api_key fields from logs
+- **Categorized Error Handling**:
+  - `IntegrityError` (400): User-friendly messages for duplicates and foreign key violations
+  - `OperationalError` (503): Handles connection issues, timeouts, and deadlocks
+  - `DataError` (400): Handles data type mismatches
+  - `ValidationError` (400): Structured field-level validation errors
+
+**Example Error Response:**
+```json
+{
+    "error": "Database Integrity Error",
+    "message": "A record with this information already exists",
+    "error_id": "7f9c8d4e-3b2a-4c1d-9e8f-6a5b4c3d2e1f",
+    "timestamp": "2025-01-19T18:30:45.123456"
+}
+```
+
+**Benefits:**
+- ✅ Better debugging with unique error IDs for tracking
+- ✅ Security through sensitive data redaction
+- ✅ User-friendly error messages instead of generic "Internal Server Error"
+- ✅ Comprehensive logging with full context for troubleshooting
+- ✅ Consistent error structure across all endpoints
+
+See `ERROR_HANDLING.md` for complete documentation.
+
+### 2. Swagger Documentation ✅ **V3 NEW**
 
 Complete interactive API documentation:
 
@@ -119,7 +155,7 @@ swagger_config = {
 - Authentication integration
 - Example payloads for all routes
 
-### 2. Comprehensive Testing ✅ **V3 NEW**
+### 3. Comprehensive Testing ✅ **V3 NEW**
 
 Full test suite with 30+ tests:
 
@@ -156,7 +192,7 @@ class TestMechanicRoutes(unittest.TestCase):
 - Validation tests
 - Edge case tests
 
-### 3. Rate Limiting
+### 4. Rate Limiting
 
 Protects the API from abuse by limiting request frequency:
 
@@ -176,7 +212,7 @@ def login():
 - **Create Service Ticket**: 10 requests per hour
 - **Create Inventory Part**: 20 requests per hour
 
-### 4. Caching
+### 5. Caching
 
 Improves performance by caching frequently accessed data:
 
@@ -194,7 +230,7 @@ def get_mechanics():
 - Reduces database load on repeated requests
 - Automatically invalidated on updates
 
-### 5. JWT Token Authentication
+### 6. JWT Token Authentication
 
 **Token Generation:**
 ```python
@@ -217,7 +253,7 @@ def protected_route():
 - Bearer token format
 - Secure password hashing with Werkzeug
 
-### 6. Advanced Queries
+### 7. Advanced Queries
 
 #### **Pagination**
 Efficient data retrieval with page-based results:
@@ -272,7 +308,7 @@ PUT /service-tickets/1/edit
 }
 ```
 
-### 7. Inventory Management
+### 8. Inventory Management
 
 **Complete Parts Tracking:**
 - Part catalog with SKU management
