@@ -116,17 +116,43 @@ Choose **PUT `/service-tickets/{ticket_id}/edit`** (bulk edit):
 
 ### 3. Testing Implementation Demo (5 minutes)
 
+**IMPORTANT: Test Database Setup**
+
+Before running tests, demonstrate the test database setup:
+
+```bash
+# Show the test database creation script
+python create_test_db.py
+```
+
+**Output:**
+```
+Creating test database...
+✓ Test database 'mechanic_shop_v3_test' created successfully
+✓ Database connection closed
+```
+
+**Explain:**
+- Tests use a separate database (`mechanic_shop_v3_test`)
+- Prevents interference with development data
+- Rate limiting disabled in test mode for faster execution
+- Customer address fields made optional for test flexibility
+
 **Show Test Structure:**
 
 #### Step 1: Display Test Files
 In VS Code or file explorer, show `tests/` folder:
 ```
 tests/
-├── test_customer.py          # 8+ tests
-├── test_mechanic.py          # 7+ tests  
-├── test_service_ticket.py    # 9+ tests
-└── test_inventory.py         # 9+ tests
+├── __init__.py
+├── test_auth.py              # 13 tests (authentication & registration)
+├── test_customer.py          # 26 tests (customer & vehicle routes)
+├── test_mechanic.py          # 18 tests (mechanic routes)
+├── test_service_ticket.py    # 30 tests (service ticket routes)
+└── test_inventory.py         # 19 tests (inventory management)
 ```
+
+**Total: 106 tests across 5 test suites**
 
 #### Step 2: Open Example Test File
 Open `tests/test_mechanic.py`:
