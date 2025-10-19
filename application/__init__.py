@@ -42,7 +42,7 @@ def create_app(config_name='default'):
         ],
         "static_url_path": "/flasgger_static",
         "swagger_ui": True,
-        "specs_route": "/api/docs"
+        "specs_route": "/apidocs"
     }
     
     swagger_template = {

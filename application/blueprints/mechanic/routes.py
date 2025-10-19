@@ -471,7 +471,7 @@ def delete_mechanic(mechanic_id):
           properties:
             message:
               type: string
-              example: Mechanic id: 1, successfully deleted.
+              example: "Mechanic id: 1, successfully deleted."
       404:
         description: Mechanic not found
       401:
